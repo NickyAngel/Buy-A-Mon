@@ -22,9 +22,21 @@ async function seed() {
   // Create Mons
 
   const mons = await Promise.all([
-    Mons.create({ name: "Bulbasaur", price: 3.99 }),
-    Mons.create({ name: "Ivysaur", price: 4.99 }),
-    Mons.create({ name: "Venasaur", price: 6.99 }),
+    Mons.create({
+      name: "Bulbasaur",
+      price: 3.99,
+      Description: "low level grass pokemon",
+    }),
+    Mons.create({
+      name: "Ivysaur",
+      price: 4.99,
+      Description: "Mid level grass pokemon",
+    }),
+    Mons.create({
+      name: "Venasaur",
+      price: 6.99,
+      Description: "high level grass pokemon",
+    }),
   ]);
 
   console.log(`seeded ${users.length} users`);
