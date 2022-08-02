@@ -1,9 +1,11 @@
-"use strict";
+
+'use strict';
 
 const {
   db,
-  models: { User, Mons },
-} = require("../server/db");
+  models: { User, Cart, Mons },
+} = require('../server/db');
+
 
 /**
  * seed - this function clears the database, updates tables to
@@ -11,14 +13,18 @@ const {
  */
 async function seed() {
   await db.sync({ force: true }); // clears db and matches models to tables
-  console.log("db synced!");
+
+  console.log('db synced!');
 
   // Creating Users
   const users = await Promise.all([
-    User.create({ username: "cody", password: "123" }),
-    User.create({ username: "murphy", password: "123" }),
+    User.create({ username: 'cody', password: '123' }),
+    User.create({ username: 'murphy', password: '123' }),
   ]);
 
+  console.log(`seeded ${users.length} users`);
+  
+  
   // Create Mons
 
   const mons = await Promise.all([
@@ -38,8 +44,20 @@ async function seed() {
       Description: "high level grass pokemon",
     }),
   ]);
+  
+  
+  // Creating Carts
+  const carts = await Promise.all([
+    //creates two empty carts and one cart with 2 of item #1
+    Cart.create(),
+    Cart.create(),
+    Cart.create({ QtyOfItemNum1: 2 }),
+  ]);
+  console.log(`seeded ${carts.length} carts`);
+  //testing prototype method
+  //should add 3 items to QtyOfItemNum2 in the 3rd cart
+  carts[2].addXItems(2, 3);
 
-  console.log(`seeded ${users.length} users`);
   console.log(`seeded successfully`);
   return {
     users: {
@@ -51,6 +69,7 @@ async function seed() {
       Ivysaur: mons[1],
       Venasaur: mons[2],
     },
+
   };
 }
 /*
@@ -59,16 +78,20 @@ async function seed() {
  The `seed` function is concerned only with modifying the database.
 */
 async function runSeed() {
-  console.log("seeding...");
+
+  console.log('seeding...');
+  
   try {
     await seed();
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
   } finally {
-    console.log("closing db connection");
+
+    console.log('closing db connection');
     await db.close();
-    console.log("db connection closed");
+    console.log('db connection closed');
+
   }
 }
 
