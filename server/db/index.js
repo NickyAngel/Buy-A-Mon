@@ -2,6 +2,7 @@
 
 const db = require('./db');
 
+const Mons = require("./models/Mons");
 const User = require('./models/User');
 const Cart = require('./models/Cart');
 
@@ -12,8 +13,10 @@ const Cart = require('./models/Cart');
 
 module.exports = {
   db,
+  Mons,
   models: {
     User,
+    Mons,
     Cart,
   },
 };
