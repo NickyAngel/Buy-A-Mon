@@ -60,8 +60,8 @@ router.put('/:id', async (req, res, next) => {
 router.delete('/:id', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id)
-    await user.destroy(req.paramas.id)
-    res.send(jump)
+    await user.destroy(req.params.id)
+    res.send(user)
     
   } catch (err) {
     next(err)
