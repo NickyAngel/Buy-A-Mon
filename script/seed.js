@@ -28,7 +28,7 @@ async function seed() {
     Cart.create(),
     Cart.create({ QtyOfItemNum1: 2 }),
   ]);
-  console.log(`seeded${carts.length} carts`);
+  console.log(`seeded ${carts.length} carts`);
 
   console.log(`seeded successfully`);
   return {
