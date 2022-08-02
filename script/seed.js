@@ -29,6 +29,9 @@ async function seed() {
     Cart.create({ QtyOfItemNum1: 2 }),
   ]);
   console.log(`seeded ${carts.length} carts`);
+  //testing prototype method
+  //should add 3 items to QtyOfItemNum2 in the 3rd cart
+  carts[2].addXItems(2, 3);
 
   console.log(`seeded successfully`);
   return {

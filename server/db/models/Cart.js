@@ -411,6 +411,7 @@ module.exports = Cart;
 // when passed the item id and the num to add
 // use case: call this function when use hits "add to cart" button to add
 // some number of items to their cart
-Cart.prototype.addXItems = (itemId, qty) => {
-  this[`QtyOfItem${itemId}`] += qty;
+Cart.prototype.addXItems = async function (itemId, qty) {
+  this.increment(`QtyOfItemNum${itemId}`, { by: qty });
+  await this.save();
 };
