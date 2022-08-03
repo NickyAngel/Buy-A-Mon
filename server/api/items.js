@@ -31,7 +31,7 @@ router.get('/:id', async (req, res, next) => {
 
   //Create the item as an admin
 //POST api/items/:id/
-router.post('/:id/create', async (req, res, next) => {
+router.post('/:id/create/', async (req, res, next) => {
     try {
       //decide what the req body looks like
       const item = await Item.create(req.body)
@@ -60,7 +60,7 @@ router.put('/:id/', async (req, res, next) => {
 
   //Delete the item if admin is deleting
 //DELETE api/items/:id
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id/', async (req, res, next) => {
     try {
       const item = await Item.findByPk(req.params.id)
       await item.destroy(req.params.id)

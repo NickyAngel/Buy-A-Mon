@@ -1,8 +1,8 @@
 //this is the access point for all things database related!
 
-const db = require('./db');
 
-const Item = require('./models/Item');
+const db = require("./db");
+const Items = require("./models/Items");
 const User = require('./models/User');
 const Order = require('./models/Order');
 const OrderItem = require('./models/Order-item');
@@ -22,9 +22,10 @@ OrderItem.belongsTo(Item);
 
 module.exports = {
   db,
+  Items
   models: {
     User,
-    Item,
+    Items,
     Order,
     OrderItem,
   },
