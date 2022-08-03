@@ -97,6 +97,23 @@ router.put('/:id/cart/', async (req, res, next) => {
   }
 })
 
+// Are we trying to destroy carts per user? or maybe we can empty a cart at checkout
+//PUT api/users/:id/cart/ EMPTY CART AT CHECKOUT
+router.put('/:id/cart/', async (req, res, next) => {
+  try {
+    const cart = await Cart.findByPk(req.params.id)
+    await cart.update({
+       itemNumber1: 0,
+       itemNumber2: 0,
+       })
+    res.send(cart)
+    
+  } catch (err) {
+    next(err)
+  }
+})
+
+
 //Are we going to even allow for item creation to be a feature sincei it can be implicitly bound to each user
 // //POST api/users/:id/cart/
 // router.post('/:id/cart/', async (req, res, next) => {
@@ -111,20 +128,5 @@ router.put('/:id/cart/', async (req, res, next) => {
 
 
 
-//Are we trying to destroy carts per user? or maybe we can empty a cart at checkout
-// //PUT api/users/:id/cart/ EMPTY CART AT CHECKOUT
-// router.put('/:id/cart/', async (req, res, next) => {
-//   try {
-//     const cart = await Cart.findByPk(req.params.id)
-//     await cart.update({
-//        itemNumber1: 0,
-//        itemNumber2: 0,
-//        })
-//     res.send(cart)
-    
-//   } catch (err) {
-//     next(err)
-//   }
-// })
 
 //Do we need DELETE cart route?
