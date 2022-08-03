@@ -1,11 +1,14 @@
-"use strict";
-const pokedex = require("./pokedata");
-// import pokedex from "./pokedata";
+
+'use strict';
 
 const {
   db,
-  models: { User, Items },
-} = require("../server/db");
+  models: { User, Order, Items, OrderItem },
+} = require('../server/db');
+
+"use strict";
+const pokedex = require("./pokedata");
+// import pokedex from "./pokedata";
 
 
 /**
@@ -23,6 +26,53 @@ async function seed() {
     User.create({ username: 'murphy', password: '123' }),
   ]);
   console.log(`seeded ${users.length} users`);
+
+  // Creating Orders
+  const orders = await Promise.all([
+    //creates two empty orders
+    Order.create(),
+    Order.create(),
+  ]);
+
+  console.log(`seeded ${orders.length} orders`);
+
+  //testing thorugh table and associations
+  const cody = users[0];
+  const bulb = items[0];
+  const ivy = items[1];
+  const order1 = orders[0];
+  // add one bulb to order1
+  await bulb.addOrder(order1, {
+    through: { qty: 1, price: bulb.price, totalPrice: bulb.price * 1 },
+  });
+  // add two ivy to order1
+  await ivy.addOrder(order1, {
+    through: { qty: 2, price: ivy.price, totalPrice: ivy.price * 2 },
+  });
+  // set owner of order1 to cody
+  await order1.setUser(cody);
+
+  // testing eager loading
+
+  // attempting to console.log each mon in order1 (not working yet)
+  const order1Contents = await OrderItem.findAll({
+    where: {
+      orderId: 1,
+    },
+  });
+
+//create items
+
+  await Promise.all(
+    order1Contents.map(async item => {
+      const prod = await Item.findByPk(item.itemId);
+      console.log(prod);
+      return prod;
+    })
+  );
+
+  console.log(`seeded successfully`);
+  return;
 
 
   await Promise.all(
@@ -44,20 +94,17 @@ async function seed() {
  The `seed` function is concerned only with modifying the database.
 */
 async function runSeed() {
-
   console.log('seeding...');
-  
+
   try {
     await seed();
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
   } finally {
-
     console.log('closing db connection');
     await db.close();
     console.log('db connection closed');
-
   }
 }
 
