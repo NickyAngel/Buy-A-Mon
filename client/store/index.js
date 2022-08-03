@@ -5,6 +5,7 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import auth from './auth'
 import itemsReducer from './items'
 import cartReducer from './cart'
+import singleItemReducer from './singleItem'
 
 const reducer = combineReducers({ 
   auth,
