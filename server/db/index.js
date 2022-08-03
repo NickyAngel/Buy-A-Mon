@@ -1,7 +1,7 @@
 //this is the access point for all things database related!
 
 const db = require("./db");
-const Mons = require("./models/Mons");
+const Items = require("./models/Items");
 
 const User = require("./models/User");
 
@@ -9,9 +9,9 @@ const User = require("./models/User");
 
 module.exports = {
   db,
-  Mons,
+  Items,
   models: {
     User,
-    Mons,
+    Items,
   },
 };

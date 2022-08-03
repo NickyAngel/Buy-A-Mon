@@ -1,8 +1,10 @@
 "use strict";
+const pokedex = require("./pokedata");
+// import pokedex from "./pokedata";
 
 const {
   db,
-  models: { User, Mons },
+  models: { User, Items },
 } = require("../server/db");
 
 /**
@@ -19,39 +21,20 @@ async function seed() {
     User.create({ username: "murphy", password: "123" }),
   ]);
 
-  // Create Mons
-
-  const mons = await Promise.all([
-    Mons.create({
-      name: "Bulbasaur",
-      price: 3.99,
-      Description: "low level grass pokemon",
-    }),
-    Mons.create({
-      name: "Ivysaur",
-      price: 4.99,
-      Description: "Mid level grass pokemon",
-    }),
-    Mons.create({
-      name: "Venasaur",
-      price: 6.99,
-      Description: "high level grass pokemon",
-    }),
-  ]);
+  await Promise.all(
+    pokedex.map(async (item) => {
+      return Items.create({
+        name: item.name.english,
+        price:
+          Math.floor(Math.random() * (10 * 1000 - 1 * 100) + 1 * 100) / 100,
+        description: item.description,
+        imageUrl: item.image.hires,
+      });
+    })
+  );
 
   console.log(`seeded ${users.length} users`);
   console.log(`seeded successfully`);
-  return {
-    users: {
-      cody: users[0],
-      murphy: users[1],
-    },
-    mons: {
-      Bulbasaur: mons[0],
-      Ivysaur: mons[1],
-      Venasaur: mons[2],
-    },
-  };
 }
 /*
  We've separated the `seed` function from the `runSeed` function.
