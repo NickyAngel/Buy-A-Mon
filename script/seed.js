@@ -2,37 +2,13 @@
 
 const {
   db,
-  models: { User, Order, Items, OrderItem },
+  models: { User, Order, Item, OrderItem },
 } = require('../server/db');
 
-"use strict";
-const pokedex = require("./pokedata");
+('use strict');
+const pokedex = require('./pokedata');
 // import pokedex from "./pokedata";
 
-
-const user = [
-  {
-    firstName: "mark",
-    lastName: "pham",
-    email: "markpham@yahoo.com",
-    password: "123",
-    address: "7252 Court St. Middleburg, FL 32068",
-  },
-  {
-    firstName: "john",
-    lastName: "pham",
-    email: "johnpham@yahoo.com",
-    password: "123",
-    address: "45 N. High Noon Ave.Fairfax, VA 22030",
-  },
-  {
-    firstName: "steven",
-    lastName: "pham",
-    email: "stevenpham@yahoo.com",
-    password: "123",
-    address: "857 Oak Valley Rd. Wakefield, MA 01880",
-  },
-];
 /**
  * seed - this function clears the database, updates tables to
  *      match the models, and populates the database.
@@ -43,11 +19,30 @@ async function seed() {
   console.log('db synced!');
 
   // Creating Users
-  const users = await Promise.all([
-    User.create({ username: 'cody', password: '123' }),
-    User.create({ username: 'murphy', password: '123' }),
+  const user = await Promise.all([
+    User.create({
+      firstName: 'mark',
+      lastName: 'pham',
+      email: 'markpham@yahoo.com',
+      password: '123',
+      address: '7252 Court St. Middleburg, FL 32068',
+    }),
+    User.create({
+      firstName: 'john',
+      lastName: 'pham',
+      email: 'johnpham@yahoo.com',
+      password: '123',
+      address: '45 N. High Noon Ave.Fairfax, VA 22030',
+    }),
+    User.create({
+      firstName: 'steven',
+      lastName: 'pham',
+      email: 'stevenpham@yahoo.com',
+      password: '123',
+      address: '857 Oak Valley Rd. Wakefield, MA 01880',
+    }),
   ]);
-  console.log(`seeded ${users.length} users`);
+  console.log(`seeded ${user.length} users`);
 
   // Creating Orders
   const orders = await Promise.all([
@@ -58,8 +53,21 @@ async function seed() {
 
   console.log(`seeded ${orders.length} orders`);
 
+  // Creating Items
+
+  let items = await Promise.all(
+    pokedex.map(async item => {
+      return Item.create({
+        name: item.name.english,
+        price: Math.floor(Math.random() * (10 * 1000 - 1 * 100) + 1 * 100),
+        description: item.description,
+        imageUrl: item.image.hires,
+      });
+    })
+  );
+
   //testing thorugh table and associations
-  const cody = users[0];
+  const mark = user[0];
   const bulb = items[0];
   const ivy = items[1];
   const order1 = orders[0];
@@ -71,12 +79,12 @@ async function seed() {
   await ivy.addOrder(order1, {
     through: { qty: 2, price: ivy.price, totalPrice: ivy.price * 2 },
   });
-  // set owner of order1 to cody
-  await order1.setUser(cody);
+  // set owner of order1 to mark
+  await order1.setUser(mark);
 
   // testing eager loading
 
-  // attempting to console.log each mon in order1 
+  // attempting to console.log each mon in order1
   const order1Contents = await OrderItem.findAll({
     where: {
       orderId: 1,
@@ -92,21 +100,6 @@ async function seed() {
   );
 
   console.log(`seeded successfully`);
-
-
-// Creating Items
-
-  await Promise.all(
-    pokedex.map(async (item) => {
-      return Items.create({
-        name: item.name.english,
-        price:
-          Math.floor(Math.random() * (10 * 1000 - 1 * 100) + 1 * 100) / 100,
-        description: item.description,
-        imageUrl: item.image.hires,
-      });
-    })
-  );
 }
 
 /*

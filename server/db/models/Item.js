@@ -11,15 +11,15 @@ const Item = db.define('item', {
     type: Sequelize.INTEGER,
     allowNull: false,
     validate: {
-      min: 0.0,
+      min: 0,
     },
   },
-  imageUrL: {
+  imageUrl: {
     type: Sequelize.TEXT,
     defaultValue:
       'https://ecdn.teacherspayteachers.com/thumbitem/Pokemon-Theme-Amazing-Work-Coming-Soon-Signs-7112257-1628095729/original-7112257-1.jpg',
   },
-  Description: {
+  description: {
     type: Sequelize.TEXT,
     defaultValue: 'coming soon',
   },
