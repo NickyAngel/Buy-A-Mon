@@ -1,10 +1,11 @@
-
-'use strict';
+"use strict";
+const pokedex = require("./pokedata");
+// import pokedex from "./pokedata";
 
 const {
   db,
-  models: { User, Cart, Mons },
-} = require('../server/db');
+  models: { User, Items },
+} = require("../server/db");
 
 
 /**
@@ -21,57 +22,22 @@ async function seed() {
     User.create({ username: 'cody', password: '123' }),
     User.create({ username: 'murphy', password: '123' }),
   ]);
-
   console.log(`seeded ${users.length} users`);
-  
-  
-  // Create Mons
 
-  const mons = await Promise.all([
-    Mons.create({
-      name: "Bulbasaur",
-      price: 3.99,
-      Description: "low level grass pokemon",
-    }),
-    Mons.create({
-      name: "Ivysaur",
-      price: 4.99,
-      Description: "Mid level grass pokemon",
-    }),
-    Mons.create({
-      name: "Venasaur",
-      price: 6.99,
-      Description: "high level grass pokemon",
-    }),
-  ]);
-  
-  
-  // Creating Carts
-  const carts = await Promise.all([
-    //creates two empty carts and one cart with 2 of item #1
-    Cart.create(),
-    Cart.create(),
-    Cart.create({ QtyOfItemNum1: 2 }),
-  ]);
-  console.log(`seeded ${carts.length} carts`);
-  //testing prototype method
-  //should add 3 items to QtyOfItemNum2 in the 3rd cart
-  carts[2].addXItems(2, 3);
 
-  console.log(`seeded successfully`);
-  return {
-    users: {
-      cody: users[0],
-      murphy: users[1],
-    },
-    mons: {
-      Bulbasaur: mons[0],
-      Ivysaur: mons[1],
-      Venasaur: mons[2],
-    },
-
-  };
+  await Promise.all(
+    pokedex.map(async (item) => {
+      return Items.create({
+        name: item.name.english,
+        price:
+          Math.floor(Math.random() * (10 * 1000 - 1 * 100) + 1 * 100) / 100,
+        description: item.description,
+        imageUrl: item.image.hires,
+      });
+    })
+  );
 }
+
 /*
  We've separated the `seed` function from the `runSeed` function.
  This way we can isolate the error handling and exit trapping.

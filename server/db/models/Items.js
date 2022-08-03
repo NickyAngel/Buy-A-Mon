@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
 
-module.exports = db.define("mons", {
+const Items = db.define("items", {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -14,13 +14,15 @@ module.exports = db.define("mons", {
       min: 0.0,
     },
   },
-  imageUrL: {
+  imageUrl: {
     type: Sequelize.TEXT,
     defaultValue:
       "https://ecdn.teacherspayteachers.com/thumbitem/Pokemon-Theme-Amazing-Work-Coming-Soon-Signs-7112257-1628095729/original-7112257-1.jpg",
   },
-  Description: {
+  description: {
     type: Sequelize.TEXT,
     defaultValue: "coming soon",
   },
 });
+
+module.exports = Items;
