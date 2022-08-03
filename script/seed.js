@@ -1,11 +1,9 @@
-
 'use strict';
 
 const {
   db,
-  models: { User, Cart, Mons },
+  models: { User, Order, Mons, OrderItem },
 } = require('../server/db');
-
 
 /**
  * seed - this function clears the database, updates tables to
@@ -23,40 +21,61 @@ async function seed() {
   ]);
 
   console.log(`seeded ${users.length} users`);
-  
-  
+
   // Create Mons
 
   const mons = await Promise.all([
     Mons.create({
-      name: "Bulbasaur",
+      name: 'Bulbasaur',
       price: 3.99,
-      Description: "low level grass pokemon",
+      Description: 'low level grass pokemon',
     }),
     Mons.create({
-      name: "Ivysaur",
+      name: 'Ivysaur',
       price: 4.99,
-      Description: "Mid level grass pokemon",
+      Description: 'Mid level grass pokemon',
     }),
     Mons.create({
-      name: "Venasaur",
+      name: 'Venasaur',
       price: 6.99,
-      Description: "high level grass pokemon",
+      Description: 'high level grass pokemon',
     }),
   ]);
-  
-  
-  // Creating Carts
-  const carts = await Promise.all([
-    //creates two empty carts and one cart with 2 of item #1
-    Cart.create(),
-    Cart.create(),
-    Cart.create({ QtyOfItemNum1: 2 }),
+
+  // Creating Orders
+  const orders = await Promise.all([
+    //creates two empty orders
+    Order.create(),
+    Order.create(),
   ]);
-  console.log(`seeded ${carts.length} carts`);
-  //testing prototype method
-  //should add 3 items to QtyOfItemNum2 in the 3rd cart
-  carts[2].addXItems(2, 3);
+
+  console.log(`seeded ${orders.length} orders`);
+
+  //testing thorugh table and associations
+  const cody = users[0];
+  const bulb = mons[0];
+  const ivy = mons[1];
+  const order1 = orders[0];
+  // add one bulb to order1
+  await bulb.addOrder(order1, {
+    through: { qty: 1, price: bulb.price, totalPrice: bulb.price * 1 },
+  });
+  // add two ivy to order1
+  await ivy.addOrder(order1, {
+    through: { qty: 2, price: ivy.price, totalPrice: ivy.price * 2 },
+  });
+  // set owner of order1 to cody
+  await order1.setUser(cody);
+  const order1Contents = await OrderItem.findAll({
+    where: {
+      orderId: 1,
+    },
+  });
+  // attempting to console.log each mon in order1 (not working yet)
+  order1Contents.map(async mon => {
+    const item = await Mons.findByPk(mon.monId);
+    console.log(item);
+  });
 
   console.log(`seeded successfully`);
   return {
@@ -69,7 +88,6 @@ async function seed() {
       Ivysaur: mons[1],
       Venasaur: mons[2],
     },
-
   };
 }
 /*
@@ -78,20 +96,17 @@ async function seed() {
  The `seed` function is concerned only with modifying the database.
 */
 async function runSeed() {
-
   console.log('seeding...');
-  
+
   try {
     await seed();
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
   } finally {
-
     console.log('closing db connection');
     await db.close();
     console.log('db connection closed');
-
   }
 }
 
