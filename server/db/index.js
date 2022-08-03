@@ -22,7 +22,7 @@ OrderItem.belongsTo(Item);
 
 module.exports = {
   db,
-  Items
+  Items,
   models: {
     User,
     Items,
