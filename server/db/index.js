@@ -2,7 +2,7 @@
 
 
 const db = require("./db");
-const Items = require("./models/Items");
+const Item = require("./models/Item");
 const User = require('./models/User');
 const Order = require('./models/Order');
 const OrderItem = require('./models/Order-item');
@@ -22,10 +22,9 @@ OrderItem.belongsTo(Item);
 
 module.exports = {
   db,
-  Items
   models: {
     User,
-    Items,
+    Item,
     Order,
     OrderItem,
   },
