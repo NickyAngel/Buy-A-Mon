@@ -2,7 +2,7 @@
 
 const db = require('./db');
 
-const Mons = require('./models/Mons');
+const Item = require('./models/Item');
 const User = require('./models/User');
 const Order = require('./models/Order');
 const OrderItem = require('./models/Order-item');
@@ -12,16 +12,20 @@ const OrderItem = require('./models/Order-item');
 User.hasMany(Order);
 Order.belongsTo(User);
 
-Order.belongsToMany(Mons, { through: OrderItem });
-Mons.belongsToMany(Order, { through: OrderItem });
+//Super Many:Many relationship (from sequelize documentation)
+Order.belongsToMany(Item, { through: OrderItem });
+Item.belongsToMany(Order, { through: OrderItem });
+Order.hasMany(OrderItem);
+OrderItem.belongsTo(Order);
+Item.hasMany(OrderItem);
+OrderItem.belongsTo(Item);
 
 module.exports = {
   db,
-  Mons,
   models: {
     User,
-    Mons,
+    Item,
     Order,
-    OrderItem
+    OrderItem,
   },
 };

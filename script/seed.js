@@ -2,7 +2,7 @@
 
 const {
   db,
-  models: { User, Order, Mons, OrderItem },
+  models: { User, Order, Item, OrderItem },
 } = require('../server/db');
 
 /**
@@ -22,22 +22,22 @@ async function seed() {
 
   console.log(`seeded ${users.length} users`);
 
-  // Create Mons
+  // Create Items
 
-  const mons = await Promise.all([
-    Mons.create({
+  const items = await Promise.all([
+    Item.create({
       name: 'Bulbasaur',
-      price: 3.99,
+      price: 399,
       Description: 'low level grass pokemon',
     }),
-    Mons.create({
+    Item.create({
       name: 'Ivysaur',
-      price: 4.99,
+      price: 499,
       Description: 'Mid level grass pokemon',
     }),
-    Mons.create({
+    Item.create({
       name: 'Venasaur',
-      price: 6.99,
+      price: 699,
       Description: 'high level grass pokemon',
     }),
   ]);
@@ -53,8 +53,8 @@ async function seed() {
 
   //testing thorugh table and associations
   const cody = users[0];
-  const bulb = mons[0];
-  const ivy = mons[1];
+  const bulb = items[0];
+  const ivy = items[1];
   const order1 = orders[0];
   // add one bulb to order1
   await bulb.addOrder(order1, {
@@ -66,29 +66,26 @@ async function seed() {
   });
   // set owner of order1 to cody
   await order1.setUser(cody);
+
+  // testing eager loading
+
+  // attempting to console.log each mon in order1 (not working yet)
   const order1Contents = await OrderItem.findAll({
     where: {
       orderId: 1,
     },
   });
-  // attempting to console.log each mon in order1 (not working yet)
-  order1Contents.map(async mon => {
-    const item = await Mons.findByPk(mon.monId);
-    console.log(item);
-  });
+
+  await Promise.all(
+    order1Contents.map(async item => {
+      const prod = await Item.findByPk(item.itemId);
+      console.log(prod);
+      return prod;
+    })
+  );
 
   console.log(`seeded successfully`);
-  return {
-    users: {
-      cody: users[0],
-      murphy: users[1],
-    },
-    mons: {
-      Bulbasaur: mons[0],
-      Ivysaur: mons[1],
-      Venasaur: mons[2],
-    },
-  };
+  return;
 }
 /*
  We've separated the `seed` function from the `runSeed` function.

@@ -1,11 +1,10 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
-const Mons = require('./Mons');
 
 const OrderItem = db.define('order-item', {
   //price of each indv item at time of purchase
   price: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.INTEGER,
   },
   //quantity of item in order
   qty: {
@@ -14,7 +13,7 @@ const OrderItem = db.define('order-item', {
   },
   //price * qty = totalPrice
   totalPrice: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.INTEGER,
   },
 });
 
