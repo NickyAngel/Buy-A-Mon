@@ -1,4 +1,3 @@
-
 'use strict';
 
 const {
@@ -11,6 +10,29 @@ const pokedex = require("./pokedata");
 // import pokedex from "./pokedata";
 
 
+const user = [
+  {
+    firstName: "mark",
+    lastName: "pham",
+    email: "markpham@yahoo.com",
+    password: "123",
+    address: "7252 Court St. Middleburg, FL 32068",
+  },
+  {
+    firstName: "john",
+    lastName: "pham",
+    email: "johnpham@yahoo.com",
+    password: "123",
+    address: "45 N. High Noon Ave.Fairfax, VA 22030",
+  },
+  {
+    firstName: "steven",
+    lastName: "pham",
+    email: "stevenpham@yahoo.com",
+    password: "123",
+    address: "857 Oak Valley Rd. Wakefield, MA 01880",
+  },
+];
 /**
  * seed - this function clears the database, updates tables to
  *      match the models, and populates the database.
@@ -54,14 +76,12 @@ async function seed() {
 
   // testing eager loading
 
-  // attempting to console.log each mon in order1 (not working yet)
+  // attempting to console.log each mon in order1 
   const order1Contents = await OrderItem.findAll({
     where: {
       orderId: 1,
     },
   });
-
-//create items
 
   await Promise.all(
     order1Contents.map(async item => {
@@ -72,8 +92,9 @@ async function seed() {
   );
 
   console.log(`seeded successfully`);
-  return;
 
+
+// Creating Items
 
   await Promise.all(
     pokedex.map(async (item) => {
@@ -95,7 +116,6 @@ async function seed() {
 */
 async function runSeed() {
   console.log('seeding...');
-
   try {
     await seed();
   } catch (err) {
