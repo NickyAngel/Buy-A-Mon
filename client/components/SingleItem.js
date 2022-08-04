@@ -31,6 +31,8 @@ const mapState = (state) => {
     item: state.singleItem,
   };
 };
-const mapDispatch = (dispatch) => ({});
+const mapDispatch = (dispatch) => ({
+  item: (id) => dispatch(fetchItem(id)),
+});
 
 export default connect(mapState, mapDispatch)(SingleItem);
