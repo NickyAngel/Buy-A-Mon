@@ -41,7 +41,80 @@ async function seed() {
       password: '123',
       address: '857 Oak Valley Rd. Wakefield, MA 01880',
     }),
+    User.create({
+      firstName: 'nick',
+      lastName: 'angel',
+      email: 'nickangel@yahoo.com',
+      password: '123',
+    }),
+    User.create({
+      firstName: 'cody',
+      lastName: 'jackson',
+      email: 'codyjackson@gmail.com',
+      password: '123',
+    }),
+    User.create({
+      firstName: 'cliff',
+      lastName: 'brown',
+      email: 'cb@yahoo.com',
+      password: '123',
+    }),
+    User.create({
+      firstName: 'john',
+      lastName: 'smith',
+      email: 'johnsmith@yahoo.com',
+      password: '123',
+    }),
+    User.create({
+      firstName: 'miles',
+      lastName: 'davis',
+      email: 'md@gmail.com',
+      password: '123',
+    }),
+    User.create({
+      firstName: 'silly',
+      lastName: 'name',
+      email: 'silly@yahoo.com',
+      password: '123',
+    }),
+    User.create({
+      firstName: 'voldemort',
+      lastName: 'riddle',
+      email: 'marvolo@yahoo.com',
+      password: 'horcrux!',
+    }),
+    User.create({
+      firstName: 'joe',
+      lastName: 'biden',
+      email: 'potus@gmail.com',
+      password: 'password123',
+    }),
+    User.create({
+      firstName: 'holly',
+      lastName: 'brown',
+      email: 'hb@yahoo.com',
+      password: '456',
+    }),
+    User.create({
+      firstName: 'ron',
+      lastName: 'swanson',
+      email: 'wood@yahoo.com',
+      password: 'DuckHunter',
+    }),
+    User.create({
+      firstName: 'swag',
+      lastName: 'lord',
+      email: 'coolcat420@gmail.com',
+      password: 'SwagLmao6969',
+    }),
+    User.create({
+      firstName: 'nils',
+      lastName: 'frahm',
+      email: 'nils@hotmail.com',
+      password: 'AllMelody$@#',
+    }),
   ]);
+
   console.log(`seeded ${user.length} users`);
 
   // Creating Orders
@@ -65,6 +138,8 @@ async function seed() {
       });
     })
   );
+
+  console.log(`seeded ${items.length} items`);
 
   //testing thorugh table and associations
   const mark = user[0];
@@ -90,11 +165,11 @@ async function seed() {
       orderId: 1,
     },
   });
-
   await Promise.all(
     order1Contents.map(async item => {
       const prod = await Item.findByPk(item.itemId);
-      console.log(prod);
+      // works so gonna stop logging everytime we seed
+      // console.log(prod);
       return prod;
     })
   );
