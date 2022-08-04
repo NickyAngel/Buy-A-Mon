@@ -7,29 +7,63 @@ import { authenticate } from '../store';
  */
 const AuthForm = props => {
   const { name, displayName, handleSubmit, error } = props;
-
-  return (
-    <div>
-      <form onSubmit={handleSubmit} name={name}>
-        <div>
-          <label htmlFor="email">
-            <small>Email</small>
-          </label>
-          <input name="email" type="text" />
-        </div>
-        <div>
-          <label htmlFor="password">
-            <small>Password</small>
-          </label>
-          <input name="password" type="password" />
-        </div>
-        <div>
-          <button type="submit">{displayName}</button>
-        </div>
-        {error && error.response && <div> {error.response.data} </div>}
-      </form>
-    </div>
+  const loginForm = (
+    <form onSubmit={handleSubmit} name={name}>
+      <div>
+        <label htmlFor="email">
+          <small>Email</small>
+        </label>
+        <input name="email" type="text" />
+      </div>
+      <div>
+        <label htmlFor="password">
+          <small>Password</small>
+        </label>
+        <input name="password" type="password" />
+      </div>
+      <div>
+        <button type="submit">{displayName}</button>
+      </div>
+      {error && error.response && <div> {error.response.data} </div>}
+    </form>
   );
+  const signupForm = (
+    <form onSubmit={handleSubmit} name={name}>
+      <div>
+        <label htmlFor="firstName">
+          <small>First Name</small>
+        </label>
+        <input name="firstName" type="text" />
+      </div>
+
+      <div>
+        <label htmlFor="lastName">
+          <small>Last Name</small>
+        </label>
+        <input name="lastName" type="text" />
+      </div>
+
+      <div>
+        <label htmlFor="email">
+          <small>Email</small>
+        </label>
+        <input name="email" type="text" />
+      </div>
+
+      <div>
+        <label htmlFor="password">
+          <small>Password</small>
+        </label>
+        <input name="password" type="password" />
+      </div>
+
+      <div>
+        <button type="submit">{displayName}</button>
+      </div>
+      {error && error.response && <div> {error.response.data} </div>}
+    </form>
+  );
+  return <div>{name === 'signup' ? signupForm : loginForm}</div>;
 };
 
 /**
@@ -62,7 +96,13 @@ const mapDispatch = dispatch => {
       const formName = evt.target.name;
       const email = evt.target.email.value;
       const password = evt.target.password.value;
-      dispatch(authenticate(email, password, formName));
+      let firstName = null;
+      let lastName = null;
+      evt.target.firstName
+        ? (firstName = evt.target.firstName.value)
+        : firstName;
+      evt.target.lastName ? (lastName = evt.target.lastName.value) : lastName;
+      dispatch(authenticate(email, password, formName, firstName, lastName));
     },
   };
 };
