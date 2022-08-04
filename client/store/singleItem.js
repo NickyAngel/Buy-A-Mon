@@ -1,4 +1,5 @@
 import axios from "axios";
+import itemsReducer from "./items";
 
 const SET_SINGLE_ITEM = "SET_SINGLE_ITEM";
 //const SEARCH_ITEM = 'SEARCH_ITEM'
@@ -45,7 +46,7 @@ let initialState = [];
 const singleItemReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_SINGLE_ITEM:
-      return action.ITEM[0];
+      return action.ITEM;
     //   case SEARCH_ITEM:
     //     return  action.ITEM[0]
 
