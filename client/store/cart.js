@@ -16,11 +16,11 @@ export const setCart = CART => {
   };
 };
 //THUNK: GRAB ALL CART
-export const fetchCart = () => {
+export const fetchCart = (id) => {
   return async dispatch => {
     try {
       const token = window.localStorage.getItem('token');
-      const { data } = await axios.get('/api/users/:id/cart', {
+      const { data } = await axios.get(`/api/users/${id}/cart`, {
         headers: { authorization: token },
       });
       dispatch(setCart(data));
