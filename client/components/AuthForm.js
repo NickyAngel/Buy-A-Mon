@@ -105,6 +105,13 @@ const mapDispatch = dispatch => {
         ? (firstName = evt.target.firstName.value)
         : firstName;
       evt.target.lastName ? (lastName = evt.target.lastName.value) : lastName;
+      if (
+        formName === 'signup' &&
+        (firstName.length < 1 || lastName.length < 1)
+      ) {
+        alert(`name fields cannot be empty`);
+        return;
+      }
       if (formName === 'signup' && !regex.test(password)) {
         alert(
           `password must be between 8 and 20 characters.
@@ -118,7 +125,7 @@ const mapDispatch = dispatch => {
       }
       if (formName === 'signup' && !emailRegex.test(email)) {
         alert(`email must be valid format`);
-        return
+        return;
       }
       dispatch(authenticate(email, password, formName, firstName, lastName));
     },
