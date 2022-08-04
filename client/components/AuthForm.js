@@ -98,10 +98,28 @@ const mapDispatch = dispatch => {
       const password = evt.target.password.value;
       let firstName = null;
       let lastName = null;
+      let regex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$%!^%()*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+      let emailRegex = /(\w|!|#|\$|%|&|\*|\.)*@(\w|!|#|\$|%|&|\*|\.)*.com/;
       evt.target.firstName
         ? (firstName = evt.target.firstName.value)
         : firstName;
       evt.target.lastName ? (lastName = evt.target.lastName.value) : lastName;
+      if (formName === 'signup' && !regex.test(password)) {
+        alert(
+          `password must be between 8 and 20 characters.
+          Password must contain:
+          -one uppercase letter
+          -one lowercase letter
+          -one number
+          -one symbol '()!@#$%^&*'`
+        );
+        return;
+      }
+      if (formName === 'signup' && !emailRegex.test(email)) {
+        alert(`email must be valid format`);
+        return
+      }
       dispatch(authenticate(email, password, formName, firstName, lastName));
     },
   };
