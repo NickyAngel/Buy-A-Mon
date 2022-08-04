@@ -35,7 +35,7 @@ class Routes extends Component {
             <Route path="/allitems" component={AllItems} />
             <Route path="/checkout" component={CheckOut} />
             <Route path="/signupform" component={SignupForm} />
-            <Route path="/singleitem" component={SingleItem} />
+            <Route exact path="/items/:id" component={SingleItem} />
           </Switch>
         )}
       </div>
