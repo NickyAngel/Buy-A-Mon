@@ -19,9 +19,7 @@ router.get("/", async (req, res, next) => {
 //api/items/:id
 router.get("/:id", async (req, res, next) => {
   try {
-    const item = await Item.findByPk({
-      id: req.body.id,
-    });
+    const item = await Item.findByPk(req.params.id);
     res.json(item);
   } catch (err) {
     next(err);
