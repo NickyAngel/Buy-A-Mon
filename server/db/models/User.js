@@ -85,7 +85,6 @@ User.prototype.generateToken = function () {
  * classMethods
  */
 User.authenticate = async function ({ email, password }) {
-  console.log(email);
   const user = await this.findOne({ where: { email: email } });
   if (!user || !(await user.correctPassword(password))) {
     const error = Error('Incorrect email/password');
@@ -97,6 +96,8 @@ User.authenticate = async function ({ email, password }) {
 
 User.findByToken = async function (token) {
   try {
+    //this is showing as undefined (which is bad)
+    console.log('token: ', token);
     const { id } = await jwt.verify(token, process.env.JWT);
     const user = User.findByPk(id);
     if (!user) {

@@ -1,9 +1,9 @@
-const router = require("express").Router();
+const router = require('express').Router();
 const {
   models: { User, Order, OrderItem, Item },
-} = require("../db");
+} = require('../db');
 module.exports = router;
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 const requireToken = async (req, res, next) => {
   try {
@@ -17,13 +17,13 @@ const requireToken = async (req, res, next) => {
 };
 //getting all users by ID? not sure where we would do this
 //GET api/users/
-router.get("/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const users = await User.findAll({
       // explicitly select only the id and email fields - even though
       // users' passwords are encrypted, it won't help if we just
       // send everything to anyone who asks!
-      attributes: ["id", "email"],
+      attributes: ['id', 'email'],
     });
     res.json(users);
   } catch (err) {
@@ -33,7 +33,7 @@ router.get("/", async (req, res, next) => {
 
 //Grabbing a users data/profile when logged in
 //GET api/users/:id
-router.get("/:id", async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
     res.json(user);
@@ -44,7 +44,7 @@ router.get("/:id", async (req, res, next) => {
 
 //Create a new user row to the User table
 //POST api/users/
-router.post("/", async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     //decide what the req body looks like
     const user = await User.create(req.body);
@@ -56,7 +56,7 @@ router.post("/", async (req, res, next) => {
 
 //Update the user once the form is updated
 //PUT api/users/:id
-router.put("/:id", async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
   try {
     //decide what the req body looks like
     const user = await User.findByPk(req.params.id);
@@ -69,7 +69,7 @@ router.put("/:id", async (req, res, next) => {
 
 //Delete the user if the user wants the account to be deleted
 //DELETE api/users/:id
-router.delete("/:id", async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
     await user.destroy(req.params.id);
@@ -83,11 +83,14 @@ router.delete("/:id", async (req, res, next) => {
 
 //grab the cart per single user
 //GET api/users/:id/cart/
-router.get("/:id/cart/", requireToken, async (req, res, next) => {
-  try {
-    const tokenFromFrontEnd = req.headers.jwt;
-    const payload = jwt.verify(tokenFromFrontEnd, process.env.JWT);
-    if (payload.id === req.params.id) {
+router.get(
+  '/:id/cart/',
+  /*requireToken,*/ async (req, res, next) => {
+    // console.log('req.headers: ', req.headers);
+    try {
+      // const tokenFromFrontEnd = req.headers.authorization;
+      // const payload = jwt.verify(tokenFromFrontEnd, process.env.JWT);
+      // if (payload.id === req.params.id) {
       const cart = await Order.findOne({
         where: { userId: req.params.id, open: true },
       });
@@ -96,25 +99,25 @@ router.get("/:id/cart/", requireToken, async (req, res, next) => {
       });
       const itemDetails = [];
       await Promise.all(
-        items.map(async (item) => {
+        items.map(async item => {
           let eachMon = await Item.findByPk(item.itemId);
           eachMon.dataValues.priceAtSaleTime = item.price;
           eachMon.dataValues.qty = item.qty;
           eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
-          console.log(eachMon);
           itemDetails.push(eachMon);
         })
       );
       res.json(itemDetails);
+      // }
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 //Update the cart per item added to each cart
 //PUT api/users/:id/cart/
-router.put("/:id/cart/", async (req, res, next) => {
+router.put('/:id/cart/', async (req, res, next) => {
   try {
     //decide what the req body looks like
     const cart = await Cart.findByPk(req.params.id);
@@ -133,7 +136,7 @@ router.put("/:id/cart/", async (req, res, next) => {
 
 // Are we trying to destroy carts per user? or maybe we can empty a cart at checkout
 //PUT api/users/:id/cart/ EMPTY CART AT CHECKOUT
-router.put("/:id/cart/", async (req, res, next) => {
+router.put('/:id/cart/', async (req, res, next) => {
   try {
     const cart = await Cart.findByPk(req.params.id);
     await cart.update({
