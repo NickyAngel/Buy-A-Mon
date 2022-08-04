@@ -13,7 +13,7 @@ class Checkout extends React.Component {
 
   handle() {
     this.props.checkout(this.state.email);
-    this.props.history.push("/completedOrder");
+    this.props.history.push("/");
   }
   handleSubmit(event) {
     this.setState({
@@ -27,46 +27,25 @@ class Checkout extends React.Component {
   render() {
     return (
       <div>
-        {this.props.cart.items && this.props.cart.items.length !== 0 ? (
+        <h1>Checkout </h1>
+
+        {this.props.orders.item && this.props.orders.item.length !== 0 ? (
           <div>
             {items.map((item) => (
               <Link to={`/items/${item.id}`} key={item.id}>
                 {item.name}
-                <img height="400vh" width="400vh" src={items.imageUrl} />
+                <img height="400vh" width="400vh" src={item.imageUrl} />
                 {item.price}
               </Link>
             ))}
+
+            <button onSubmit={() => this.handlesubmit()} type="submit">
+              "Submit Payment" c
+            </button>
           </div>
         ) : (
           <div>No items in Cart </div>
         )}
-
-        <h1>Checkout </h1>
-        <form>
-          <div className="checkout">
-            <label htmlFor="email">Check Out Confirmation:</label>
-            <input
-              name="email"
-              onChange={this.handleChange}
-              type="text"
-              value={this.state.email}
-              id="email"
-              placeholder="email..."
-            />
-            <input
-              name="password"
-              onChange={this.handleChange}
-              type="text"
-              value={this.state.email}
-              id="password"
-              placeholder="password..."
-            />
-          </div>
-
-          <button onSubmit={() => this.handlesubmit()} type="submit">
-            Submit Payment
-          </button>
-        </form>
       </div>
     );
   }

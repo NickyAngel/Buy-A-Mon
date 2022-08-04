@@ -3,9 +3,13 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../store";
 
+
+
+
 const Navbar = ({ handleClick, isLoggedIn }) => (
   <div>
-    <h1>TEAM DEMOOOO</h1>
+    <h1>Pokemon Cards</h1>
+
     <nav>
       {isLoggedIn ? (
         <div>
@@ -18,8 +22,12 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
       ) : (
         <div>
           {/* The navbar will show these links before you log in */}
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
+          <Link to="/login">Login (one that comes with boilerplate?)</Link>
+          <Link to="/signup">Sign Up (one that comes with boilerplate?)</Link>
+          <Link to="/allitems">All Items</Link>
+          <Link to="/checkout">Check Out</Link>
+          <Link to="/signupform">Sign Up</Link>
+         
         </div>
       )}
     </nav>

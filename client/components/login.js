@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 // import { fetch } from "../redux/";
 
-class SignupForm extends React.Component {
+class Login extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -12,6 +12,7 @@ class SignupForm extends React.Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    //test push
   }
 
   handleChange(evt) {
@@ -60,8 +61,6 @@ const mapState = (state) => {
     user: state.user,
   };
 };
-const mapDispatch = (dispatch) => ({
-  //   fetchAddUser: (users) => dispatch(fetchAddUser(users)),
-});
+const mapDispatch = (dispatch) => ({});
 
-export default connect(null, mapDispatch)(SignupForm);
+export default connect(null, mapDispatch)(Login);
