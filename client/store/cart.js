@@ -1,4 +1,5 @@
 import axios from "axios";
+import { token } from "morgan";
 
 let initialState = [];
 
@@ -19,15 +20,16 @@ export const setCart = (CART) => {
 export const fetchCart = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get('/api/users/:id/cart');
+      const token = window.localStorage.getItem("TOKEN");
+      const { data } = await axios.get("/api/users/:id/cart", {
+        headers: { authorization: token },
+      });
       dispatch(setCart(data));
     } catch (err) {
       console.log(err);
     }
   };
 };
-
-
 
 //UPDATE CART WITH ADDING/REMOVING ITEMS
 export const reformCart = (CART) => {
@@ -46,22 +48,20 @@ export const updateCart = (CART) => {
 
 //UPDATE CART WITH CLEARING CART
 export const emptyCart = (CART) => {
-    return {
-      type: CLEAR_CART,
-      CART,
-    };
+  return {
+    type: CLEAR_CART,
+    CART,
   };
-  //THUNK: PUT REQUEST FOR ADDING/REMOVING ITEMS
-  export const clearCart = (CART) => {
-    //add in an empty object to update the row as empty
-    let empty = {}
-    return async (dispatch) => {
-      const { data } = await axios.put(`/api/users/${CART.id}/cart`, empty);
-      dispatch(reformCart(data));
-    };
+};
+//THUNK: PUT REQUEST FOR ADDING/REMOVING ITEMS
+export const clearCart = (CART) => {
+  //add in an empty object to update the row as empty
+  let empty = {};
+  return async (dispatch) => {
+    const { data } = await axios.put(`/api/users/${CART.id}/cart`, empty);
+    dispatch(reformCart(data));
   };
-  
-
+};
 
 //REDUCER
 export default function cartReducer(state = initialState, action) {
@@ -72,10 +72,12 @@ export default function cartReducer(state = initialState, action) {
     //   return [...state, action.CART];
     case UPDATE_CART:
       return state.map((CART) =>
-        CART.id === action.CART.id ? action.CART : CART);
+        CART.id === action.CART.id ? action.CART : CART
+      );
     case CLEAR_CART:
-        return state.map((CART) =>
-            CART.id === action.CART.id ? action.CART : CART);
+      return state.map((CART) =>
+        CART.id === action.CART.id ? action.CART : CART
+      );
     // case DELETE_CART:
     //   return state.filter((CART) => CART.id !== action.id);
     default:
@@ -83,15 +85,14 @@ export default function cartReducer(state = initialState, action) {
   }
 }
 
-
-// //ADD TO CART 
+// //ADD TO CART
 // export const addCART = (CART) => {
 //     return {
 //       type: ADD_CART,
 //       CART,
 //     };
 //   };
-//   //THUNK ADD CART 
+//   //THUNK ADD CART
 //   export const createCART = (CART) => {
 //     return async (dispatch) => {
 //       try {

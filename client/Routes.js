@@ -21,21 +21,14 @@ class Routes extends Component {
 
     return (
       <div>
-        {isLoggedIn ? (
-          <Switch>
-            <Route path="/home" component={Home} />
-            <Redirect to="/home" />
-          </Switch>
-        ) : (
-          <Switch>
-            <Route path="/" exact component={AllItems} />
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={Signup} />
-            <Route path="/allitems" component={AllItems} />
-            <Route path="/checkout" component={CheckOut} />
-            <Route exact path="/items/:id" component={SingleItem} />
-          </Switch>
-        )}
+        <Switch>
+          <Route path="/" exact component={AllItems} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/allitems" component={AllItems} />
+          <Route path="/checkout" component={CheckOut} />
+          <Route exact path="/items/:id" component={SingleItem} />
+        </Switch>
       </div>
     );
   }
@@ -63,3 +56,9 @@ const mapDispatch = (dispatch) => {
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
 export default withRouter(connect(mapState, mapDispatch)(Routes));
+
+/* {isLoggedIn ? (
+          <Switch>
+            <Route path="/home" component={Home} />
+          </Switch>
+        ) : ( */
