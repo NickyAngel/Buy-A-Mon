@@ -119,8 +119,7 @@ async function seed() {
 
   // Creating Orders
   const orders = await Promise.all([
-    //creates two empty orders
-    Order.create(),
+    //creates one empty order
     Order.create(),
   ]);
 
@@ -160,19 +159,19 @@ async function seed() {
   // testing eager loading
 
   // attempting to console.log each mon in order1
-  const order1Contents = await OrderItem.findAll({
-    where: {
-      orderId: 1,
-    },
-  });
-  await Promise.all(
-    order1Contents.map(async item => {
-      const prod = await Item.findByPk(item.itemId);
-      // works so gonna stop logging everytime we seed
-      // console.log(prod);
-      return prod;
-    })
-  );
+  // const order1Contents = await OrderItem.findAll({
+  //   where: {
+  //     orderId: 1,
+  //   },
+  // });
+  // await Promise.all(
+  //   order1Contents.map(async item => {
+  //     const prod = await Item.findByPk(item.itemId);
+  //     // works so gonna stop logging everytime we seed
+  //     // console.log(prod);
+  //     return prod;
+  //   })
+  // );
 
   console.log(`seeded successfully`);
 }
