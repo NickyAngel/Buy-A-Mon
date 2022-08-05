@@ -1,11 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+// import { cart, delete, add,  } from "../store/cart";
 
 class Checkout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
+      //cart: {}
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -13,38 +16,66 @@ class Checkout extends React.Component {
 
   handle() {
     this.props.checkout(this.state.email);
-    this.props.history.push("/");
   }
   handleSubmit(event) {
     this.setState({
       [event.target.name]: event.target.value,
     });
   }
-  //cart table?
-
-  // order table? or add products.item.map
-  //add total
   render() {
+    let subtotal = 0;
+    let totalItems = 0;
     return (
       <div>
-        <h1>Checkout </h1>
+        <h1>Checkout -My Cart- </h1>
 
         {this.props.orders.item && this.props.orders.item.length !== 0 ? (
           <div>
-            {items.map((item) => (
-              <Link to={`/items/${item.id}`} key={item.id}>
-                {item.name}
-                <img height="400vh" width="400vh" src={item.imageUrl} />
-                {item.price}
-              </Link>
-            ))}
+            {items.map((item) => {
+              return (
+                <div>
+                  <Link to={`/items/${item.id}`} key={item.id}>
+                    {item.name}
+                    <img height="400vh" width="400vh" src={item.imageUrl} />
+                    <h5>Price: ${item.price}</h5>
+                  </Link>
 
+                  <button
+                    onClick={() => {
+                      this.props.deleteCart(orders.item.id);
+                    }}
+                  >
+                    Remove item from Cart
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      this.props.addCart(orders.item.id, item.quantity + 1);
+                    }}
+                  >
+                    Add One
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      this.props.subtract(orders.item.id, item.quantity - 1);
+                    }}
+                  >
+                    Subtract One
+                  </button>
+                </div>
+              );
+            })}
             <button onSubmit={() => this.handlesubmit()} type="submit">
-              "Submit Payment" c
+              "CHECKOUT"
             </button>
+            ({totalItems} += {orders.item.quantity}); ({subtotal} +={" "}
+            {item.price} *{item.quantity});
+            <h1>Total Items: {totalItems}</h1>
+            <h1>Subtotal: ${(subtotal / 100).toFixed(2)}</h1>
           </div>
         ) : (
-          <div>No items in Cart </div>
+          <h1>No items in Cart </h1>
         )}
       </div>
     );
@@ -52,12 +83,18 @@ class Checkout extends React.Component {
 }
 
 const mapState = (state) => ({
+  //user: state.auth ?
   cart: state.cart,
-  cards: state.cards,
+  item: state.items,
 });
 
 const mapDispatch = (dispatch) => {
-  return {};
+  return {
+    getCart: () => dispatch(fetchCart()),
+    addCart: () => dispatch(updateCart()),
+    subtract: () => dispatch(subtractCart()),
+    deleteCart: () => dispatch(deleteCart()),
+  };
 };
 
 export default connect(mapState, mapDispatch)(Checkout);
