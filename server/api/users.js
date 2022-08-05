@@ -114,7 +114,38 @@ router.get(
     }
   }
 );
-
+//PUT ROUTE
+router.put(
+  '/:id/cart/',
+  /*requireToken,*/ async (req, res, next) => {
+    // console.log('req.headers: ', req.headers);
+    try {
+      // const tokenFromFrontEnd = req.headers.authorization;
+      // const payload = jwt.verify(tokenFromFrontEnd, process.env.JWT);
+      // if (payload.id === req.params.id) {
+      const cart = await Order.findOne({
+        where: { userId: req.params.id, open: true },
+      });
+      const items = await OrderItem.findAll({
+        where: { orderId: cart.id },
+      });
+      const itemDetails = [];
+      await Promise.all(
+        items.map(async item => {
+          let eachMon = await Item.findByPk(item.itemId);
+          eachMon.dataValues.priceAtSaleTime = item.price;
+          eachMon.dataValues.qty = item.qty;
+          eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
+          itemDetails.push(eachMon);
+        })
+      );
+      res.json(itemDetails);
+      // }
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 //Update the cart per item added to each cart
 //PUT api/users/:id/cart/
 router.put('/:id/cart/', async (req, res, next) => {

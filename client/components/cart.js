@@ -1,21 +1,31 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchCart } from '../store/cart';
+import { fetchCart, updateCart } from '../store/cart';
 import { me } from '../store/auth';
 
 //this is Mark's id in my seed file for some reason
 // const id = 11;
 
 export class Cart extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: null
+    };
+  
+  }
   async componentDidMount() {
     const user = await this.props.getUser();
-    const id = user.auth.id;
-    this.props.getCart(id);
+    const userId = user.auth.id;
+    this.setState({id: userId})
+    this.props.getCart(userId);
   }
 
   render() {
     let { cart } = this.props;
+    console.log(this.props)
+    
     return (
       <div>
         <h1>Cart</h1>
@@ -31,6 +41,14 @@ export class Cart extends React.Component {
                 <div>
                   <h3>Total Price: ${item.totalPriceAtSaleTime / 100}</h3>
                   <h3>Quantity: {item.qty}</h3>
+
+                  {/* UPDATE CART FEATURE */}
+                  <button onClick={()=> {this.props.update(
+                    {...this.props, item: item.qty+1},this.state.id)}}>
+                      Add</button>
+                  <button onClick={()=> {this.props.update({},this.state.id)}}>Remove</button>
+                  {/* UPDATE CART FEATURE */}
+
                 </div>
               </div>
             );
@@ -52,6 +70,8 @@ const mapDispatch = dispatch => {
   return {
     getCart: id => dispatch(fetchCart(id)),
     getUser: () => dispatch(me()),
+    //UPDATE CART
+    update: (newQty,id) => dispatch(updateCart(newQty,id ))
   };
 };
 

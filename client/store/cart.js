@@ -38,9 +38,9 @@ export const reformCart = CART => {
   };
 };
 //THUNK: PUT REQUEST FOR ADDING/REMVING ITEMS
-export const updateCart = CART => {
+export const updateCart = (CART,id) => {
   return async dispatch => {
-    const { data } = await axios.put(`/api/users/${CART.id}/cart`, CART);
+    const { data } = await axios.put(`/api/users/${id}/cart`, CART);
     dispatch(reformCart(data));
   };
 };

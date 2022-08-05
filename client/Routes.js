@@ -5,7 +5,6 @@ import { Login, Signup } from './components/AuthForm';
 import Home from './components/Home';
 import { me } from './store';
 import AllItems from './components/AllItems';
-import CheckOut from './components/CheckOut';
 import SingleItem from './components/SingleItem';
 import Cart from './components/Cart';
 
@@ -27,7 +26,6 @@ class Routes extends Component {
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route path="/allitems" component={AllItems} />
-          <Route path="/checkout" component={CheckOut} />
           <Route path="/items/:id" component={SingleItem} />
           <Route path="/cart" component={Cart} />
         </Switch>
