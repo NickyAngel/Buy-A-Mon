@@ -119,7 +119,8 @@ async function seed() {
 
   // Creating Orders
   const orders = await Promise.all([
-    //creates one empty order
+    //creates two empty orders
+    Order.create(),
     Order.create(),
   ]);
 
@@ -155,6 +156,22 @@ async function seed() {
   });
   // set owner of order1 to mark
   await order1.setUser(mark);
+
+  const person = user[1];
+  const item1 = items[69];
+  const item2 = items[70];
+  const item3 = items[71];
+  const order2 = orders[1];
+  await item1.addOrder(order2, {
+    through: { qty: 1, price: item1.price, totalPrice: item1.price * 1 },
+  });
+  await item2.addOrder(order2, {
+    through: { qty: 2, price: item2.price, totalPrice: item2.price * 2 },
+  });
+  await item3.addOrder(order2, {
+    through: { qty: 7, price: item3.price, totalPrice: item3.price * 7 },
+  });
+  await order2.setUser(person);
 
   // testing eager loading
 

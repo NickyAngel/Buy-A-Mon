@@ -4,9 +4,6 @@ import { Link } from 'react-router-dom';
 import { fetchCart } from '../store/cart';
 import { me } from '../store/auth';
 
-//this is Mark's id in my seed file for some reason
-// const id = 11;
-
 export class Cart extends React.Component {
   async componentDidMount() {
     const user = await this.props.getUser();
