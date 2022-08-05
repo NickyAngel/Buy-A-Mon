@@ -2,11 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCart } from '../store/cart';
+import { me } from '../store/auth';
 
 //this is Mark's id in my seed file for some reason
-const id = 11;
+// const id = 11;
+
 export class Cart extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
+    const user = await this.props.getUser();
+    const id = user.auth.id;
     this.props.getCart(id);
   }
 
@@ -17,10 +21,10 @@ export class Cart extends React.Component {
         <h1>Cart</h1>
         <div id="cartItems">
           {cart.map(item => {
-            console.log(item);
+            //console.log(item);
             return (
               <div className="cartItems" key={item.id}>
-                <Link to={`/cart/${item.id}`}>
+                <Link to={`/items/${item.id}`}>
                   {item.name}
                   <img height="100vh" width="100vh" src={item.imageUrl} />
                 </Link>
@@ -47,6 +51,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     getCart: id => dispatch(fetchCart(id)),
+    getUser: () => dispatch(me()),
   };
 };
 
