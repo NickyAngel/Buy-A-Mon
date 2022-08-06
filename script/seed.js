@@ -132,7 +132,8 @@ async function seed() {
     pokedex.map(async item => {
       return Item.create({
         name: item.name.english,
-        price: Math.floor(Math.random() * (10 * 1000 - 1 * 100) + 1 * 100),
+        price: 1,
+        //price: Math.floor(Math.random() * (10 * 1000 - 1 * 100) + 1 * 100),
         description: item.description,
         imageUrl: item.image.hires,
       });

@@ -16,7 +16,7 @@ export const setCart = CART => {
   };
 };
 //THUNK: GRAB ALL CART
-export const fetchCart = (id) => {
+export const fetchCart = id => {
   return async dispatch => {
     try {
       const token = window.localStorage.getItem('token');
@@ -32,13 +32,14 @@ export const fetchCart = (id) => {
 
 //UPDATE CART WITH ADDING/REMOVING ITEMS
 export const reformCart = CART => {
+  console.log('CART: ', CART);
   return {
     type: UPDATE_CART,
     CART,
   };
 };
 //THUNK: PUT REQUEST FOR ADDING/REMVING ITEMS
-export const updateCart = (CART,id) => {
+export const updateCart = (CART, id) => {
   return async dispatch => {
     const { data } = await axios.put(`/api/users/${id}/cart`, CART);
     dispatch(reformCart(data));
@@ -73,6 +74,8 @@ export default function cartReducer(state = initialState, action) {
       return state.map(CART =>
         CART.id === action.CART.id ? action.CART : CART
       );
+      //[{a: 1}, {b:2}, {c:3}]
+      //[{a:new}, {b:2}, {c:3}]
     case CLEAR_CART:
       return state.map(CART =>
         CART.id === action.CART.id ? action.CART : CART

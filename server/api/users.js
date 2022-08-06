@@ -15,6 +15,7 @@ const requireToken = async (req, res, next) => {
     next(e);
   }
 };
+
 //getting all users by ID? not sure where we would do this
 //GET api/users/
 router.get('/', async (req, res, next) => {
@@ -115,70 +116,52 @@ router.get(
   }
 );
 //PUT ROUTE
-router.put(
-  '/:id/cart/',
-  /*requireToken,*/ async (req, res, next) => {
-    // console.log('req.headers: ', req.headers);
-    try {
-      // const tokenFromFrontEnd = req.headers.authorization;
-      // const payload = jwt.verify(tokenFromFrontEnd, process.env.JWT);
-      // if (payload.id === req.params.id) {
-      const cart = await Order.findOne({
-        where: { userId: req.params.id, open: true },
-      });
-      const items = await OrderItem.findAll({
-        where: { orderId: cart.id },
-      });
-      const itemDetails = [];
-      await Promise.all(
-        items.map(async item => {
-          let eachMon = await Item.findByPk(item.itemId);
-          eachMon.dataValues.priceAtSaleTime = item.price;
-          eachMon.dataValues.qty = item.qty;
-          eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
-          itemDetails.push(eachMon);
-        })
-      );
-      res.json(itemDetails);
-      // }
-    } catch (err) {
-      next(err);
-    }
-  }
-);
-//Update the cart per item added to each cart
-//PUT api/users/:id/cart/
 router.put('/:id/cart/', async (req, res, next) => {
   try {
-    //decide what the req body looks like
-    const cart = await Cart.findByPk(req.params.id);
-    //what are we able to change per cart? Quantity?
-    res.send(
-      await cart.update({
-        ...req.body,
-        // itemNumber1: req.body.itemNumber1,
-        // itemNumber2: req.body.itemNumber2,
-      })
-    );
+    //console.log(req.body);
+    const cart = await Order.findOne({
+      where: { userId: req.params.id, open: true },
+    });
+    const item = await OrderItem.findOne({
+      where: { itemId: req.body.id },
+    });
+    // console.log(item);
+    let newItem = await item.update({
+      ...item,
+      qty: req.body.qty,
+      totalPrice: item.price * (item.qty + 1),
+    });
+    console.log(newItem);
+    // const itemDetails = [];
+    // await Promise.all(
+    //   items.map(async item => {
+    //     let eachMon = await Item.findByPk(item.itemId);
+    //     eachMon.dataValues.priceAtSaleTime = item.price;
+    //     eachMon.dataValues.qty = item.qty;
+    //     eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
+    //     itemDetails.push(eachMon);
+    //   })
+    // );
+    res.send(newItem);
+    // }
   } catch (err) {
     next(err);
   }
 });
-
 // Are we trying to destroy carts per user? or maybe we can empty a cart at checkout
 //PUT api/users/:id/cart/ EMPTY CART AT CHECKOUT
-router.put('/:id/cart/', async (req, res, next) => {
-  try {
-    const cart = await Cart.findByPk(req.params.id);
-    await cart.update({
-      itemNumber1: 0,
-      itemNumber2: 0,
-    });
-    res.send(cart);
-  } catch (err) {
-    next(err);
-  }
-});
+// router.put('/:id/cart/', async (req, res, next) => {
+//   try {
+//     const cart = await Cart.findByPk(req.params.id);
+//     await cart.update({
+//       itemNumber1: 0,
+//       itemNumber2: 0,
+//     });
+//     res.send(cart);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 //Are we going to even allow for item creation to be a feature sincei it can be implicitly bound to each user
 // //POST api/users/:id/cart/
