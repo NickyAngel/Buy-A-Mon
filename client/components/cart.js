@@ -61,15 +61,12 @@ export class Cart extends React.Component {
                   </button>
                   <button
                     onClick={evt => {
-                      this.props.delete(
-                        item.id,
-                        this.state.id
-                      );
+                      this.props.delete(item.id, this.state.id);
                     }}
                   >
                     Remove Pokemon
                   </button>
-                  
+
                   {/* UPDATE CART FEATURE */}
                 </div>
               </div>
@@ -95,7 +92,7 @@ const mapDispatch = dispatch => {
     //UPDATE CART
     update: (thingToUpdate, userId) =>
       dispatch(updateCart(thingToUpdate, userId)),
-    delete: (itemId,userId) => dispatch(clearItem(itemId,userId)),
+    delete: (itemId, userId) => dispatch(clearItem(itemId, userId)),
   };
 };
 

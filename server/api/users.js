@@ -123,7 +123,7 @@ router.put('/:id/cart/', async (req, res, next) => {
       where: { userId: req.params.id, open: true },
     });
     const item = await OrderItem.findOne({
-      where: { itemId: req.body.id },
+      where: { itemId: req.body.id, orderId: cart.id },
     });
     // console.log(item);
     if (req.body.add) {
@@ -162,12 +162,12 @@ router.put('/:id/cart/', async (req, res, next) => {
 //DELETE ROUTE FOR CART ITEM
 router.delete('/:id/cart/:itemId', async (req, res, next) => {
   try {
-    console.log(req.params)
+    console.log(req.params);
     const cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
     });
     await OrderItem.destroy({
-      where: { itemId: req.params.itemId },
+      where: { itemId: req.params.itemId, orderId: cart.id },
     });
     const items = await OrderItem.findAll({
       where: { orderId: cart.id },

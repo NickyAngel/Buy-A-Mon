@@ -132,8 +132,8 @@ async function seed() {
     pokedex.map(async item => {
       return Item.create({
         name: item.name.english,
-        price: 1,
-        //price: Math.floor(Math.random() * (10 * 1000 - 1 * 100) + 1 * 100),
+        //price: 1,
+        price: Math.floor(Math.random() * (10 * 1000 - 1 * 100) + 1 * 100),
         description: item.description,
         imageUrl: item.image.hires,
       });
@@ -171,6 +171,10 @@ async function seed() {
   });
   await item3.addOrder(order2, {
     through: { qty: 7, price: item3.price, totalPrice: item3.price * 7 },
+  });
+  //add a bulb to order 2 to check if editing/deleting from cart 1 affects cart two
+  await bulb.addOrder(order2, {
+    through: { qty: 1, price: bulb.price, totalPrice: bulb.price * 1 },
   });
   await order2.setUser(person);
 
