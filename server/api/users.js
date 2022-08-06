@@ -159,6 +159,34 @@ router.put('/:id/cart/', async (req, res, next) => {
     next(err);
   }
 });
+//DELETE ROUTE FOR CART ITEM
+router.delete('/:id/cart/:itemId', async (req, res, next) => {
+  try {
+    console.log(req.params)
+    const cart = await Order.findOne({
+      where: { userId: req.params.id, open: true },
+    });
+    await OrderItem.destroy({
+      where: { itemId: req.params.itemId },
+    });
+    const items = await OrderItem.findAll({
+      where: { orderId: cart.id },
+    });
+    const itemDetails = [];
+    await Promise.all(
+      items.map(async item => {
+        let eachMon = await Item.findByPk(item.itemId);
+        eachMon.dataValues.priceAtSaleTime = item.price;
+        eachMon.dataValues.qty = item.qty;
+        eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
+        itemDetails.push(eachMon);
+      })
+    );
+    res.json(itemDetails);
+  } catch (err) {
+    next(err);
+  }
+});
 // Are we trying to destroy carts per user? or maybe we can empty a cart at checkout
 //PUT api/users/:id/cart/ EMPTY CART AT CHECKOUT
 // router.put('/:id/cart/', async (req, res, next) => {

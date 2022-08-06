@@ -47,19 +47,17 @@ export const updateCart = (CART, id) => {
 };
 
 //UPDATE CART WITH CLEARING CART
-export const emptyCart = CART => {
+export const removeItem = CART => {
   return {
     type: CLEAR_CART,
     CART,
   };
 };
-//THUNK: PUT REQUEST FOR ADDING/REMOVING ITEMS
-export const clearCart = CART => {
-  //add in an empty object to update the row as empty
-  let empty = {};
+//THUNK: DELETE REQUEST FOR CLEARING AN ITEM
+export const clearItem = (itemId,userId) => {
   return async dispatch => {
-    const { data } = await axios.put(`/api/users/${CART.id}/cart`, empty);
-    dispatch(reformCart(data));
+    const { data } = await axios.delete(`/api/users/${userId}/cart/${itemId}`);
+    dispatch(removeItem(data));
   };
 };
 
@@ -78,9 +76,7 @@ export default function cartReducer(state = initialState, action) {
       //[{a: 1}, {b:2}, {c:3}]
       //[{a:new}, {b:2}, {c:3}]
     case CLEAR_CART:
-      return state.map(CART =>
-        CART.id === action.CART.id ? action.CART : CART
-      );
+      return action.CART;
     // case DELETE_CART:
     //   return state.filter((CART) => CART.id !== action.id);
     default:

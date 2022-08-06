@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchCart, updateCart } from '../store/cart';
+import { fetchCart, updateCart, clearItem } from '../store/cart';
 import { me } from '../store/auth';
 
 export class Cart extends React.Component {
@@ -59,6 +59,17 @@ export class Cart extends React.Component {
                   >
                     Minus 1
                   </button>
+                  <button
+                    onClick={evt => {
+                      this.props.delete(
+                        item.id,
+                        this.state.id
+                      );
+                    }}
+                  >
+                    Remove Pokemon
+                  </button>
+                  
                   {/* UPDATE CART FEATURE */}
                 </div>
               </div>
@@ -84,6 +95,7 @@ const mapDispatch = dispatch => {
     //UPDATE CART
     update: (thingToUpdate, userId) =>
       dispatch(updateCart(thingToUpdate, userId)),
+    delete: (itemId,userId) => dispatch(clearItem(itemId,userId)),
   };
 };
 
