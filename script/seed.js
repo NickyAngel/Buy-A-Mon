@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
 const {
   db,
   models: { User, Order, Item, OrderItem },
-} = require('../server/db');
+} = require("../server/db");
 
-('use strict');
-const pokedex = require('./pokedata');
+("use strict");
+const pokedex = require("./pokedata");
 // import pokedex from "./pokedata";
 
 /**
@@ -16,102 +16,118 @@ const pokedex = require('./pokedata');
 async function seed() {
   await db.sync({ force: true }); // clears db and matches models to tables
 
-  console.log('db synced!');
+  console.log("db synced!");
 
   // Creating Users
   const user = await Promise.all([
     User.create({
-      firstName: 'mark',
-      lastName: 'pham',
-      email: 'markpham@yahoo.com',
-      password: '123',
-      address: '7252 Court St. Middleburg, FL 32068',
+      firstName: "mark",
+      lastName: "pham",
+      email: "markpham@yahoo.com",
+      password: "123",
+      address: "7252 Court St. Middleburg, FL 32068",
+      role: "administrator",
     }),
     User.create({
-      firstName: 'john',
-      lastName: 'pham',
-      email: 'johnpham@yahoo.com',
-      password: '123',
-      address: '45 N. High Noon Ave.Fairfax, VA 22030',
+      firstName: "john",
+      lastName: "pham",
+      email: "johnpham@yahoo.com",
+      password: "123",
+      address: "45 N. High Noon Ave.Fairfax, VA 22030",
     }),
     User.create({
-      firstName: 'steven',
-      lastName: 'pham',
-      email: 'stevenpham@yahoo.com',
-      password: '123',
-      address: '857 Oak Valley Rd. Wakefield, MA 01880',
+      firstName: "steven",
+      lastName: "pham",
+      email: "stevenpham@yahoo.com",
+      password: "123",
+      address: "857 Oak Valley Rd. Wakefield, MA 01880",
     }),
     User.create({
-      firstName: 'nick',
-      lastName: 'angel',
-      email: 'nickangel@yahoo.com',
-      password: '123',
+      firstName: "nick",
+      lastName: "angel",
+      email: "nickangel@yahoo.com",
+      password: "123",
+      role: "administrator",
     }),
     User.create({
-      firstName: 'cody',
-      lastName: 'jackson',
-      email: 'codyjackson@gmail.com',
-      password: '123',
+      firstName: "cody",
+      lastName: "jackson",
+      email: "codyjackson@gmail.com",
+      password: "123",
     }),
     User.create({
-      firstName: 'cliff',
-      lastName: 'brown',
-      email: 'cb@yahoo.com',
-      password: '123',
+      firstName: "cliff",
+      lastName: "brown",
+      email: "cb@yahoo.com",
+      password: "123",
     }),
     User.create({
-      firstName: 'john',
-      lastName: 'smith',
-      email: 'johnsmith@yahoo.com',
-      password: '123',
+      firstName: "john",
+      lastName: "smith",
+      email: "johnsmith@yahoo.com",
+      password: "123",
     }),
     User.create({
-      firstName: 'miles',
-      lastName: 'davis',
-      email: 'md@gmail.com',
-      password: '123',
+      firstName: "miles",
+      lastName: "davis",
+      email: "md@gmail.com",
+      password: "123",
     }),
     User.create({
-      firstName: 'silly',
-      lastName: 'name',
-      email: 'silly@yahoo.com',
-      password: '123',
+      firstName: "silly",
+      lastName: "name",
+      email: "silly@yahoo.com",
+      password: "123",
     }),
     User.create({
-      firstName: 'voldemort',
-      lastName: 'riddle',
-      email: 'marvolo@yahoo.com',
-      password: 'horcrux!',
+      firstName: "voldemort",
+      lastName: "riddle",
+      email: "marvolo@yahoo.com",
+      password: "horcrux!",
     }),
     User.create({
-      firstName: 'joe',
-      lastName: 'biden',
-      email: 'potus@gmail.com',
-      password: 'password123',
+      firstName: "joe",
+      lastName: "biden",
+      email: "potus@gmail.com",
+      password: "password123",
     }),
     User.create({
-      firstName: 'holly',
-      lastName: 'brown',
-      email: 'hb@yahoo.com',
-      password: '456',
+      firstName: "holly",
+      lastName: "brown",
+      email: "hb@yahoo.com",
+      password: "456",
     }),
     User.create({
-      firstName: 'ron',
-      lastName: 'swanson',
-      email: 'wood@yahoo.com',
-      password: 'DuckHunter',
+      firstName: "ron",
+      lastName: "swanson",
+      email: "wood@yahoo.com",
+      password: "DuckHunter",
     }),
     User.create({
-      firstName: 'swag',
-      lastName: 'lord',
-      email: 'coolcat420@gmail.com',
-      password: 'SwagLmao6969',
+      firstName: "swag",
+      lastName: "lord",
+      email: "coolcat420@gmail.com",
+      password: "SwagLmao6969",
     }),
     User.create({
-      firstName: 'nils',
-      lastName: 'frahm',
-      email: 'nils@hotmail.com',
-      password: 'AllMelody$@#',
+      firstName: "nils",
+      lastName: "frahm",
+      email: "nils@hotmail.com",
+      password: "AllMelody$@#",
+    }),
+    User.create({
+      firstName: "nelson",
+      lastName: "cheng-lin",
+      email: "nelsonchenglin@hotmail.com",
+      password: "123",
+      role: "administrator",
+    }),
+    User.create({
+      firstName: "brian",
+      lastName: "lee",
+      email: "brianlee@hotmail.com",
+      password: "123",
+      role: "administrator",
     }),
   ]);
 
@@ -128,7 +144,7 @@ async function seed() {
   // Creating Items
 
   let items = await Promise.all(
-    pokedex.map(async item => {
+    pokedex.map(async (item) => {
       return Item.create({
         name: item.name.english,
         price: Math.floor(Math.random() * (10 * 1000 - 1 * 100) + 1 * 100),
@@ -182,16 +198,16 @@ async function seed() {
  The `seed` function is concerned only with modifying the database.
 */
 async function runSeed() {
-  console.log('seeding...');
+  console.log("seeding...");
   try {
     await seed();
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
   } finally {
-    console.log('closing db connection');
+    console.log("closing db connection");
     await db.close();
-    console.log('db connection closed');
+    console.log("db connection closed");
   }
 }
 
