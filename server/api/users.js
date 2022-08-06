@@ -126,23 +126,26 @@ router.put('/:id/cart/', async (req, res, next) => {
       where: { itemId: req.body.id },
     });
     // console.log(item);
-    let newItem = await item.update({
+    await item.update({
       ...item,
       qty: req.body.qty,
       totalPrice: item.price * (item.qty + 1),
     });
-    console.log(newItem);
-    // const itemDetails = [];
-    // await Promise.all(
-    //   items.map(async item => {
-    //     let eachMon = await Item.findByPk(item.itemId);
-    //     eachMon.dataValues.priceAtSaleTime = item.price;
-    //     eachMon.dataValues.qty = item.qty;
-    //     eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
-    //     itemDetails.push(eachMon);
-    //   })
-    // );
-    res.send(newItem);
+    
+    const items = await OrderItem.findAll({
+      where: { orderId: cart.id },
+    });
+    const itemDetails = [];
+    await Promise.all(
+      items.map(async item => {
+        let eachMon = await Item.findByPk(item.itemId);
+        eachMon.dataValues.priceAtSaleTime = item.price;
+        eachMon.dataValues.qty = item.qty;
+        eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
+        itemDetails.push(eachMon);
+      })
+    );
+    res.json(itemDetails);
     // }
   } catch (err) {
     next(err);

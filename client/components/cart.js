@@ -52,7 +52,7 @@ export class Cart extends React.Component {
                   <button
                     onClick={evt => {
                       this.props.update(
-                        { qty: --item.qty, id: item.id },
+                        { qty: --item.qty, id: item.id, ...item },
                         this.state.id
                       );
                     }}

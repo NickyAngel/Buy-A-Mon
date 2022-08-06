@@ -71,9 +71,10 @@ export default function cartReducer(state = initialState, action) {
     // case ADD_CART:
     //   return [...state, action.CART];
     case UPDATE_CART:
-      return state.map(CART =>
-        CART.id === action.CART.id ? action.CART : CART
-      );
+      return action.CART;
+      // return state.map(CART =>
+      //   CART.id === action.CART.id ? action.CART : CART
+      // );
       //[{a: 1}, {b:2}, {c:3}]
       //[{a:new}, {b:2}, {c:3}]
     case CLEAR_CART:
