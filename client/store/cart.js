@@ -1,15 +1,38 @@
-import axios from 'axios';
+import axios from "axios";
 
 let initialState = [];
 
-let SET_CART = 'SET_CART';
-let DELETE_CART = 'DELETE_CART';
-let UPDATE_CART = 'UPDATE_CART';
-let CLEAR_CART = 'CLEAR_CART';
-let ADD_CART = 'ADD_CART';
+let SET_CART = "SET_CART";
+let DELETE_CART = "DELETE_CART";
+let UPDATE_CART = "UPDATE_CART";
+let CLEAR_CART = "CLEAR_CART";
+let ADD_CART = "ADD_CART";
+let ADD_ITEM_TO_CART = "ADD_ITEM_TO_CART";
+
+//ACTION CREATOR: ADD ITEM TO CART
+export const addItem = (item) => {
+  return {
+    type: ADD_ITEM_TO_CART,
+    item,
+  };
+};
+
+//THUNK: ADD ITEM TO CART
+export const addItemToCart = (item, id) => {
+  return async (dispatch) => {
+    try {
+      console.log(item);
+      const { data } = await axios.post(`/api/users/${id}/cart`, item);
+      console.log(data);
+      dispatch(addItem(data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
 
 //ACTION CREATOR: SET ALL CART
-export const setCart = CART => {
+export const setCart = (CART) => {
   return {
     type: SET_CART,
     CART,
@@ -17,9 +40,9 @@ export const setCart = CART => {
 };
 //THUNK: GRAB ALL CART
 export const fetchCart = (id) => {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
-      const token = window.localStorage.getItem('token');
+      const token = window.localStorage.getItem("token");
       const { data } = await axios.get(`/api/users/${id}/cart`, {
         headers: { authorization: token },
       });
@@ -31,32 +54,32 @@ export const fetchCart = (id) => {
 };
 
 //UPDATE CART WITH ADDING/REMOVING ITEMS
-export const reformCart = CART => {
+export const reformCart = (CART) => {
   return {
     type: UPDATE_CART,
     CART,
   };
 };
 //THUNK: PUT REQUEST FOR ADDING/REMVING ITEMS
-export const updateCart = CART => {
-  return async dispatch => {
+export const updateCart = (CART) => {
+  return async (dispatch) => {
     const { data } = await axios.put(`/api/users/${CART.id}/cart`, CART);
     dispatch(reformCart(data));
   };
 };
 
 //UPDATE CART WITH CLEARING CART
-export const emptyCart = CART => {
+export const emptyCart = (CART) => {
   return {
     type: CLEAR_CART,
     CART,
   };
 };
 //THUNK: PUT REQUEST FOR ADDING/REMOVING ITEMS
-export const clearCart = CART => {
+export const clearCart = (CART) => {
   //add in an empty object to update the row as empty
   let empty = {};
-  return async dispatch => {
+  return async (dispatch) => {
     const { data } = await axios.put(`/api/users/${CART.id}/cart`, empty);
     dispatch(reformCart(data));
   };
@@ -65,16 +88,18 @@ export const clearCart = CART => {
 //REDUCER
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
+    case ADD_ITEM_TO_CART:
+      return [...state, action.item];
     case SET_CART:
       return action.CART;
     // case ADD_CART:
     //   return [...state, action.CART];
     case UPDATE_CART:
-      return state.map(CART =>
+      return state.map((CART) =>
         CART.id === action.CART.id ? action.CART : CART
       );
     case CLEAR_CART:
-      return state.map(CART =>
+      return state.map((CART) =>
         CART.id === action.CART.id ? action.CART : CART
       );
     // case DELETE_CART:
