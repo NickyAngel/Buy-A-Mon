@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchSingleItem } from "../store/singleItem";
-import { deleteItem, createItem, editItem } from "../store";
+// import { deleteItem, createItem, editItem } from "../store";
 
 class SingleItem extends React.Component {
   componentDidMount() {
@@ -42,8 +42,7 @@ const mapDispatch = (dispatch) => ({
 
 export default connect(mapState, mapDispatch)(SingleItem);
 
-// {
-//   this.props.user.role === "administrator" ? (
+// {this.props.user.role === "admin" ? (
 //     <div>
 //       <img width="400vh" height="400vh" src={imageUrl} />
 //       <h1>{name}</h1>

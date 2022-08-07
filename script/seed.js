@@ -26,7 +26,7 @@ async function seed() {
       email: "markpham@yahoo.com",
       password: "123",
       address: "7252 Court St. Middleburg, FL 32068",
-      role: "administrator",
+      role: "admin",
     }),
     User.create({
       firstName: "john",
@@ -47,7 +47,7 @@ async function seed() {
       lastName: "angel",
       email: "nickangel@yahoo.com",
       password: "123",
-      role: "administrator",
+      role: "admin",
     }),
     User.create({
       firstName: "cody",
@@ -120,14 +120,14 @@ async function seed() {
       lastName: "cheng-lin",
       email: "nelsonchenglin@hotmail.com",
       password: "123",
-      role: "administrator",
+      role: "admin",
     }),
     User.create({
       firstName: "brian",
       lastName: "lee",
       email: "brianlee@hotmail.com",
       password: "123",
-      role: "administrator",
+      role: "admin",
     }),
   ]);
 

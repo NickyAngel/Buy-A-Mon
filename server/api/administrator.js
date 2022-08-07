@@ -4,15 +4,15 @@ const {
 } = require("../db");
 module.exports = router;
 
-function administratorCheck(req, res, next) {
-  if (req.user.role === "administrator") {
+function adminCheck(req, res, next) {
+  if (req.user.role === "admin") {
     next();
   } else {
     return res.sendStatus(401);
   }
 }
 
-router.get("/", administratorCheck, async (req, res, next) => {
+router.get("/", adminCheck, async (req, res, next) => {
   try {
     const users = await User.findAll({
       attributes: ["id", "firstName", "lastName", "email"],
@@ -23,7 +23,7 @@ router.get("/", administratorCheck, async (req, res, next) => {
   }
 });
 
-router.post("/:id/create/", administratorCheck, async (req, res, next) => {
+router.post("/:id/create/", adminCheck, async (req, res, next) => {
   try {
     //decide what the req body looks like
     const item = await Item.create(req.body);
@@ -35,7 +35,7 @@ router.post("/:id/create/", administratorCheck, async (req, res, next) => {
 
 //Update the item as an admin
 //PUT api/items/:id/
-router.put("/:id/", administratorCheck, async (req, res, next) => {
+router.put("/:id/", adminCheck, async (req, res, next) => {
   try {
     //decide what the req body looks like
     const item = await Item.findByPk(req.params.id);
@@ -54,7 +54,7 @@ router.put("/:id/", administratorCheck, async (req, res, next) => {
 
 //Delete the item if admin is deleting
 //DELETE api/items/:id
-router.delete("/:id/", administratorCheck, async (req, res, next) => {
+router.delete("/:id/", adminCheck, async (req, res, next) => {
   try {
     const item = await Item.findByPk(req.params.id);
     await item.destroy(req.params.id);
