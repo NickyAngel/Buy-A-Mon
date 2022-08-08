@@ -10,6 +10,7 @@ import SingleItem from "./components/SingleItem";
 import Cart from "./components/Cart";
 import AllUsers from "./components/AllUsers";
 import createItem from "./components/createItem";
+
 /**
  * COMPONENT
  */
@@ -28,7 +29,6 @@ class Routes extends Component {
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route path="/allitems" component={AllItems} />
-          <Route path="/checkout" component={CheckOut} />
           <Route path="/items/:id" component={SingleItem} />
           <Route path="/cart" component={Cart} />
           <Route path="/users" component={AllUsers} />

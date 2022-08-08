@@ -15,6 +15,7 @@ const requireToken = async (req, res, next) => {
     next(e);
   }
 };
+
 //getting all users by ID? not sure where we would do this
 //GET api/users/
 router.get("/", async (req, res, next) => {
@@ -24,6 +25,7 @@ router.get("/", async (req, res, next) => {
       //   // users' passwords are encrypted, it won't help if we just
       //   // send everything to anyone who asks!
       attributes: ["id", "email", "firstName", "lastName", "role"],
+
     });
     res.json(users);
   } catch (err) {
@@ -58,14 +60,27 @@ router.post("/", async (req, res, next) => {
 //PUT api/users/:id
 router.put("/:id", async (req, res, next) => {
   try {
-    //decide what the req body looks like
-    const user = await User.findByPk(req.params.id);
-    //what are we able to change per user
-    res.send(await user.update({ ...req.body }));
+    const cart = await Order.findOne({
+      where: { userId: req.params.id, open: true },
+    });
+    cart.update({ ...cart, open: false });
+    res.json([]);
   } catch (err) {
     next(err);
   }
 });
+//Update the user once the form is updated
+//PUT api/users/:id
+// router.put('/:id', async (req, res, next) => {
+//   try {
+//     //decide what the req body looks like
+//     const user = await User.findByPk(req.params.id);
+//     //what are we able to change per user
+//     res.send(await user.update({ ...req.body }));
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 //Delete the user if the user wants the account to be deleted
 //DELETE api/users/:id
@@ -119,16 +134,43 @@ router.get(
 //PUT api/users/:id/cart/
 router.put("/:id/cart/", async (req, res, next) => {
   try {
-    //decide what the req body looks like
-    const cart = await Cart.findByPk(req.params.id);
-    //what are we able to change per cart? Quantity?
-    res.send(
-      await cart.update({
-        ...req.body,
-        // itemNumber1: req.body.itemNumber1,
-        // itemNumber2: req.body.itemNumber2,
+    //console.log(req.body);
+    const cart = await Order.findOne({
+      where: { userId: req.params.id, open: true },
+    });
+    const item = await OrderItem.findOne({
+      where: { itemId: req.body.id, orderId: cart.id },
+    });
+    // console.log(item);
+    if (req.body.add) {
+      await item.update({
+        ...item,
+        qty: req.body.qty,
+        totalPrice: item.price * (item.qty + 1),
+      });
+    } else {
+      await item.update({
+        ...item,
+        qty: req.body.qty,
+        totalPrice: item.price * (item.qty - 1),
+      });
+    }
+
+    const items = await OrderItem.findAll({
+      where: { orderId: cart.id },
+    });
+    const itemDetails = [];
+    await Promise.all(
+      items.map(async item => {
+        let eachMon = await Item.findByPk(item.itemId);
+        eachMon.dataValues.priceAtSaleTime = item.price;
+        eachMon.dataValues.qty = item.qty;
+        eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
+        itemDetails.push(eachMon);
       })
     );
+    res.json(itemDetails);
+    // }
   } catch (err) {
     next(err);
   }
@@ -138,14 +180,69 @@ router.put("/:id/cart/", async (req, res, next) => {
 //PUT api/users/:id/cart/ EMPTY CART AT CHECKOUT
 router.put("/:id/cart/", async (req, res, next) => {
   try {
-    const cart = await Cart.findByPk(req.params.id);
-    await cart.update({
-      itemNumber1: 0,
-      itemNumber2: 0,
+    console.log(req.params);
+    const cart = await Order.findOne({
+      where: { userId: req.params.id, open: true },
     });
-    res.send(cart);
+    await OrderItem.destroy({
+      where: { itemId: req.params.itemId, orderId: cart.id },
+    });
+    const items = await OrderItem.findAll({
+      where: { orderId: cart.id },
+    });
+    const itemDetails = [];
+    await Promise.all(
+      items.map(async item => {
+        let eachMon = await Item.findByPk(item.itemId);
+        eachMon.dataValues.priceAtSaleTime = item.price;
+        eachMon.dataValues.qty = item.qty;
+        eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
+        itemDetails.push(eachMon);
+      })
+    );
+    res.json(itemDetails);
   } catch (err) {
     next(err);
+  }
+});
+
+router.post("/:id/cart", async (req, res, next) => {
+  try {
+    let cart = await Order.findOne({
+      where: { userId: req.params.id, open: true },
+    });
+    if (!cart) {
+      cart = await Order.create();
+    }
+
+    const itemOrder = await OrderItem.findOne({
+      where: { itemId: req.body.id, orderId: cart.id },
+    });
+
+    let itemToAdd = await Item.findByPk(req.body.id);
+
+    if (itemOrder) {
+      let newQty = 0;
+      newQty = itemOrder.qty + req.body.qty;
+      await itemOrder.update({
+        qty: newQty,
+        totalPrice: itemOrder.price * newQty,
+      });
+    } else {
+      let user = await User.findByPk(req.params.id);
+      itemToAdd.addOrder(cart, {
+        through: {
+          qty: 1,
+          price: itemToAdd.price,
+          totalPrice: itemToAdd.price,
+        },
+      });
+
+      cart.setUser(user);
+    }
+    res.json(itemToAdd);
+  } catch (e) {
+    next(e);
   }
 });
 
