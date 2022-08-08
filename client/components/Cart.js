@@ -114,14 +114,18 @@ export class Cart extends React.Component {
             );
           })}
         </div>
-        <button
-          onClick={() => {
-            this.setState({ guestCart: [] });
-            window.localStorage.removeItem('cart');
-          }}
-        >
-          <Link to="/checkout">CHECKOUT</Link>
-        </button>
+        {this.state.guestCart.length !== 0 ? (
+          <button
+            onClick={() => {
+              this.setState({ guestCart: [] });
+              window.localStorage.removeItem('cart');
+            }}
+          >
+            <Link to="/checkout">CHECKOUT</Link>
+          </button>
+        ) : (
+          <span />
+        )}
       </div>
     );
     let userJSX = (
@@ -177,13 +181,17 @@ export class Cart extends React.Component {
             );
           })}
         </div>
-        <button
-          onClick={() => {
-            this.props.closeCart(this.state.id);
-          }}
-        >
-          <Link to="/checkout">CHECKOUT</Link>
-        </button>
+        {cart.length !== 0 ? (
+          <button
+            onClick={() => {
+              this.props.closeCart(this.state.id);
+            }}
+          >
+            <Link to="/checkout">CHECKOUT</Link>
+          </button>
+        ) : (
+          <span />
+        )}
       </div>
     );
     return this.state.id ? userJSX : guestJSX;
