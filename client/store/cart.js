@@ -8,6 +8,7 @@ let UPDATE_CART = "UPDATE_CART";
 let CLEAR_CART = "CLEAR_CART";
 let ADD_CART = "ADD_CART";
 let ADD_ITEM_TO_CART = "ADD_ITEM_TO_CART";
+let CLOSE_CART = 'CLOSE_CART';
 
 //ACTION CREATOR: ADD ITEM TO CART
 export const addItem = (item) => {
@@ -39,8 +40,8 @@ export const setCart = (CART) => {
   };
 };
 //THUNK: GRAB ALL CART
-export const fetchCart = (id) => {
-  return async (dispatch) => {
+export const fetchCart = id => {
+  return async dispatch => {
     try {
       const token = window.localStorage.getItem("token");
       const { data } = await axios.get(`/api/users/${id}/cart`, {
@@ -61,27 +62,41 @@ export const reformCart = (CART) => {
   };
 };
 //THUNK: PUT REQUEST FOR ADDING/REMVING ITEMS
-export const updateCart = (CART) => {
-  return async (dispatch) => {
-    const { data } = await axios.put(`/api/users/${CART.id}/cart`, CART);
+export const updateCart = (CART, id) => {
+  return async dispatch => {
+    const { data } = await axios.put(`/api/users/${id}/cart`, CART);
     dispatch(reformCart(data));
   };
 };
 
 //UPDATE CART WITH CLEARING CART
-export const emptyCart = (CART) => {
+export const removeItem = CART => {
   return {
     type: CLEAR_CART,
     CART,
   };
 };
-//THUNK: PUT REQUEST FOR ADDING/REMOVING ITEMS
-export const clearCart = (CART) => {
-  //add in an empty object to update the row as empty
-  let empty = {};
-  return async (dispatch) => {
-    const { data } = await axios.put(`/api/users/${CART.id}/cart`, empty);
-    dispatch(reformCart(data));
+//THUNK: DELETE REQUEST FOR CLEARING AN ITEM
+export const clearItem = (itemId, userId) => {
+  return async dispatch => {
+    const { data } = await axios.delete(`/api/users/${userId}/cart/${itemId}`);
+    dispatch(removeItem(data));
+  };
+};
+
+//CLOSE ORDER ON CHECKOUT
+export const endCart = CART => {
+  return {
+    type: CLOSE_CART,
+    CART,
+  };
+};
+
+//THUNK: PUT REQUEST FOR CLOSING ORDER
+export const closeCart = id => {
+  return async dispatch => {
+    const { data } = await axios.put(`/api/users/${id}`);
+    dispatch(endCart(data));
   };
 };
 
@@ -95,15 +110,18 @@ export default function cartReducer(state = initialState, action) {
     // case ADD_CART:
     //   return [...state, action.CART];
     case UPDATE_CART:
-      return state.map((CART) =>
-        CART.id === action.CART.id ? action.CART : CART
-      );
+      return action.CART;
+    // return state.map(CART =>
+    //   CART.id === action.CART.id ? action.CART : CART
+    // );
+    //[{a: 1}, {b:2}, {c:3}]
+    //[{a:new}, {b:2}, {c:3}]
     case CLEAR_CART:
-      return state.map((CART) =>
-        CART.id === action.CART.id ? action.CART : CART
-      );
+      return action.CART;
     // case DELETE_CART:
     //   return state.filter((CART) => CART.id !== action.id);
+    case CLOSE_CART:
+      return action.CART;
     default:
       return state;
   }
