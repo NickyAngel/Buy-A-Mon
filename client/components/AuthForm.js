@@ -1,11 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { authenticate } from '../store';
+import React from "react";
+import { connect } from "react-redux";
+import { authenticate } from "../store";
 
 /**
  * COMPONENT
  */
-const AuthForm = props => {
+const AuthForm = (props) => {
   const { name, displayName, handleSubmit, error } = props;
   const loginForm = (
     <form onSubmit={handleSubmit} name={name}>
@@ -63,7 +63,7 @@ const AuthForm = props => {
       {error && error.response && <div> {error.response.data} </div>}
     </form>
   );
-  return <div>{name === 'signup' ? signupForm : loginForm}</div>;
+  return <div>{name === "signup" ? signupForm : loginForm}</div>;
 };
 
 /**
@@ -73,23 +73,23 @@ const AuthForm = props => {
  *   function, and share the same Component. This is a good example of how we
  *   can stay DRY with interfaces that are very similar to each other!
  */
-const mapLogin = state => {
+const mapLogin = (state) => {
   return {
-    name: 'login',
-    displayName: 'Login',
+    name: "login",
+    displayName: "Login",
     error: state.auth.error,
   };
 };
 
-const mapSignup = state => {
+const mapSignup = (state) => {
   return {
-    name: 'signup',
-    displayName: 'Sign Up',
+    name: "signup",
+    displayName: "Sign Up",
     error: state.auth.error,
   };
 };
 
-const mapDispatch = dispatch => {
+const mapDispatch = (dispatch) => {
   return {
     handleSubmit(evt) {
       evt.preventDefault();
@@ -106,13 +106,13 @@ const mapDispatch = dispatch => {
         : firstName;
       evt.target.lastName ? (lastName = evt.target.lastName.value) : lastName;
       if (
-        formName === 'signup' &&
+        formName === "signup" &&
         (firstName.length < 1 || lastName.length < 1)
       ) {
         alert(`name fields cannot be empty`);
         return;
       }
-      if (formName === 'signup' && !regex.test(password)) {
+      if (formName === "signup" && !regex.test(password)) {
         alert(
           `password must be between 8 and 20 characters.
           Password must contain:
@@ -123,7 +123,7 @@ const mapDispatch = dispatch => {
         );
         return;
       }
-      if (formName === 'signup' && !emailRegex.test(email)) {
+      if (formName === "signup" && !emailRegex.test(email)) {
         alert(`email must be valid format`);
         return;
       }

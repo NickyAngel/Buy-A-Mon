@@ -21,10 +21,11 @@ const requireToken = async (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const users = await User.findAll({
-      // explicitly select only the id and email fields - even though
-      // users' passwords are encrypted, it won't help if we just
-      // send everything to anyone who asks!
-      attributes: ["id", "email"],
+      //   // explicitly select only the id and email fields - even though
+      //   // users' passwords are encrypted, it won't help if we just
+      //   // send everything to anyone who asks!
+      attributes: ["id", "email", "firstName", "lastName", "role"],
+
     });
     res.json(users);
   } catch (err) {
@@ -55,8 +56,9 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-//this route closes the open cart for user with this id
-router.put('/:id', async (req, res, next) => {
+//Update the user once the form is updated
+//PUT api/users/:id
+router.put("/:id", async (req, res, next) => {
   try {
     const cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
@@ -127,8 +129,10 @@ router.get(
     }
   }
 );
-//PUT ROUTE
-router.put('/:id/cart/', async (req, res, next) => {
+
+//Update the cart per item added to each cart
+//PUT api/users/:id/cart/
+router.put("/:id/cart/", async (req, res, next) => {
   try {
     //console.log(req.body);
     const cart = await Order.findOne({

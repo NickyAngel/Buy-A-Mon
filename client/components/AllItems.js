@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { deleteItem, createItem } from "../store";
+// import { deleteItem, createItem } from "../store";
 import { fetchAllItems } from "../store/items";
 
 export class AllItems extends React.Component {
@@ -18,6 +18,12 @@ export class AllItems extends React.Component {
   render() {
     let { items } = this.props;
     return (
+      //  {this.props.user.role === "admin" ? (
+
+      // ) : (
+      //   ''
+      //   )}
+      // <div>
       <div>
         <h1>Pokemon Cards</h1>
 
@@ -53,27 +59,7 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     getItems: () => dispatch(fetchAllItems()),
-    // deleteItem: (itemId) => dispatch(deleteItem(itemId)),
-    // addItem: (itemId) => dispatch(createItem(itemId)),
   };
 };
 
 export default connect(mapState, mapDispatch)(AllItems);
-
-// {userLoggedIn.role === "admin" ? (
-//   <div>
-//     <Button className="create" onClick={() => createItem(item.id)}>
-//       Add Item
-//     </Button>
-
-//     <Button className="delete" onClick={() => deleteItem(item.id)}>
-//       Delete Product
-//     </Button>
-
-//     <Button className="delete" onClick={() => editItem(item.id)}>
-//       Edit Item
-//     </Button>
-//   </div>
-// ) : (
-//   "placeholder"
-// )}

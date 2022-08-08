@@ -1,10 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { fetchSingleItem } from '../store/singleItem';
-import { addItemToCart } from '../store/cart';
-import { fetchCart } from '../store/cart';
-import { me } from '../store/auth';
+import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { fetchSingleItem } from "../store/singleItem";
+import { addItemToCart } from "../store/cart";
+import { fetchCart } from "../store/cart";
+import { me } from "../store/auth";
+import { deleteItem } from "../store/items";
+
 
 class SingleItem extends React.Component {
   constructor() {
@@ -67,13 +69,17 @@ class SingleItem extends React.Component {
       this.props.singleItem(this.props.match.params.id);
     }
   }
-
+  async componentDidMount() {
+    const user = await this.props.getUser();
+    const id = user.auth.id;
+    this.props.singleItem(this.props.match.params.id);
+    this.props.getCart(id);
+  }
   render() {
     const name = this.props.item.name;
     const imageUrl = this.props.item.imageUrl;
     const description = this.props.item.description;
     const price = this.props.item.price;
-
     return (
       <div>
         <img width="400vh" height="400vh" src={imageUrl} />
@@ -83,22 +89,61 @@ class SingleItem extends React.Component {
         <button onClick={this.handleClick} type="submit">
           Add To Cart
         </button>
+        <button
+          onClick={async () => {
+            console.log(item.id);
+            await this.props.deleteItem(item);
+          }}
+        >
+          Delete Item
+        </button>
+
       </div>
     );
   }
 }
 
-const mapState = state => {
+const mapState = (state) => {
   return {
     cart: state.cart,
     item: state.singleItem,
   };
 };
-const mapDispatch = dispatch => ({
-  singleItem: id => dispatch(fetchSingleItem(id)),
+const mapDispatch = (dispatch) => ({
+  singleItem: (id) => dispatch(fetchSingleItem(id)),
   addItem: (item, userId) => dispatch(addItemToCart(item, userId)),
-  getCart: id => dispatch(fetchCart(id)),
+  getCart: (id) => dispatch(fetchCart(id)),
   getUser: () => dispatch(me()),
+  deleteItem: (id) => dispatch(deleteItem(id)),
+
 });
 
 export default connect(mapState, mapDispatch)(SingleItem);
+
+// {this.props.user.role === "admin" ? (
+//     <div>
+//       <img width="400vh" height="400vh" src={imageUrl} />
+//       <h1>{name}</h1>
+//       <h4>${price / 100}</h4>
+//       <h4>{description}</h4>
+//       <Link to="/pokemon/addToCart"> Add to Cart</Link>
+//       <Button className="create" onClick={() => this.props.createItem(item.id)}>
+//         Add Item
+//       </Button>
+//       <Button className="delete" onClick={() => this.props.deleteItem(item.id)}>
+//         Delete Item
+//       </Button>
+//       <Button className="edit" onClick={() => this.props.editItem(item.id)}>
+//         Edit Item
+//       </Button>
+//     </div>
+//   ) : (
+//     <div>
+//       <img width="400vh" height="400vh" src={imageUrl} />
+//       <h1>{name}</h1>
+//       <h4>${price / 100}</h4>
+//       <h4>{description}</h4>
+//       <Link to="/pokemon/addToCart"> Add to Cart</Link>
+//     </div>
+//   );
+// }
