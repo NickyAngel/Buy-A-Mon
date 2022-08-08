@@ -157,7 +157,7 @@ router.post("/:id/cart", async (req, res, next) => {
     const item = await OrderItem.findOne({
       where: { itemId: req.body.id },
     });
-    console.log(req.body);
+    console.log("req.body:", req.body);
 
     // console.log(cart);
     // console.log(item);
@@ -168,7 +168,7 @@ router.post("/:id/cart", async (req, res, next) => {
       },
     });
 
-    // console.log(itemOrder);
+    console.log("ordierItem:", itemOrder);
 
     if (itemOrder) {
       let newQty = 0;
@@ -177,12 +177,19 @@ router.post("/:id/cart", async (req, res, next) => {
         qty: newQty,
       });
     } else {
-      itemOrder = await OrderItem.create({
+      //identify the userId attached
+      //identify the orderid for this user
+      //create a new row for the requested add to cart item
+      //tables updated
+      let itemToAdd = await Item.findByPk(req.body.id);
+      let newItem = await OrderItem.create({
+        qty: req.body.qty,
         price: req.body.price,
-        qty: req.body.price,
+        totalPrice: req.body.price,
         orderId: req.params.id,
         itemId: req.body.id,
       });
+      await newItem.addOrder();
     }
 
     res.json(itemOrder);
