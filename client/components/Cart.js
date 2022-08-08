@@ -151,16 +151,20 @@ export class Cart extends React.Component {
                   >
                     Add 1
                   </button>
-                  <button
-                    onClick={evt => {
-                      this.props.update(
-                        { qty: --item.qty, id: item.id, add: false, ...item },
-                        this.state.id
-                      );
-                    }}
-                  >
-                    Minus 1
-                  </button>
+                  {item.qty > 1 ? (
+                    <button
+                      onClick={evt => {
+                        this.props.update(
+                          { qty: --item.qty, id: item.id, add: false, ...item },
+                          this.state.id
+                        );
+                      }}
+                    >
+                      Minus 1
+                    </button>
+                  ) : (
+                    <span />
+                  )}
                   <button
                     onClick={evt => {
                       this.props.delete(item.id, this.state.id);
