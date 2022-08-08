@@ -151,48 +151,39 @@ router.put("/:id/cart/", async (req, res, next) => {
 
 router.post("/:id/cart", async (req, res, next) => {
   try {
-    const cart = await Order.findOne({
+    let cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
     });
-    const item = await OrderItem.findOne({
-      where: { itemId: req.body.id },
-    });
-    console.log("req.body:", req.body);
+    if (!cart) {
+      cart = await Order.create();
+    }
 
-    // console.log(cart);
-    // console.log(item);
-    let itemOrder = await OrderItem.findOne({
-      where: {
-        itemId: req.body.id,
-        // orderId: req.body.id,
-      },
+    const itemOrder = await OrderItem.findOne({
+      where: { itemId: req.body.id, orderId: cart.id },
     });
 
-    console.log("ordierItem:", itemOrder);
+    let itemToAdd = await Item.findByPk(req.body.id);
 
     if (itemOrder) {
       let newQty = 0;
       newQty = itemOrder.qty + req.body.qty;
       await itemOrder.update({
         qty: newQty,
+        totalPrice: itemOrder.price * newQty,
       });
     } else {
-      //identify the userId attached
-      //identify the orderid for this user
-      //create a new row for the requested add to cart item
-      //tables updated
-      let itemToAdd = await Item.findByPk(req.body.id);
-      let newItem = await OrderItem.create({
-        qty: req.body.qty,
-        price: req.body.price,
-        totalPrice: req.body.price,
-        orderId: req.params.id,
-        itemId: req.body.id,
+      let user = await User.findByPk(req.params.id);
+      itemToAdd.addOrder(cart, {
+        through: {
+          qty: 1,
+          price: itemToAdd.price,
+          totalPrice: itemToAdd.price,
+        },
       });
-      await newItem.addOrder();
-    }
 
-    res.json(itemOrder);
+      cart.setUser(user);
+    }
+    res.json(itemToAdd);
   } catch (e) {
     next(e);
   }
