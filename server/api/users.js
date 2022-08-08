@@ -55,18 +55,31 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-//Update the user once the form is updated
-//PUT api/users/:id
+//this route closes the open cart for user with this id
 router.put('/:id', async (req, res, next) => {
   try {
-    //decide what the req body looks like
-    const user = await User.findByPk(req.params.id);
-    //what are we able to change per user
-    res.send(await user.update({ ...req.body }));
+    console.log('hitting route');
+    const cart = await Order.findOne({
+      where: { userId: req.params.id, open: true },
+    });
+    cart.update({ ...cart, open: false });
+    res.json([]);
   } catch (err) {
     next(err);
   }
 });
+//Update the user once the form is updated
+//PUT api/users/:id
+// router.put('/:id', async (req, res, next) => {
+//   try {
+//     //decide what the req body looks like
+//     const user = await User.findByPk(req.params.id);
+//     //what are we able to change per user
+//     res.send(await user.update({ ...req.body }));
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 //Delete the user if the user wants the account to be deleted
 //DELETE api/users/:id
@@ -187,6 +200,7 @@ router.delete('/:id/cart/:itemId', async (req, res, next) => {
     next(err);
   }
 });
+
 // Are we trying to destroy carts per user? or maybe we can empty a cart at checkout
 //PUT api/users/:id/cart/ EMPTY CART AT CHECKOUT
 // router.put('/:id/cart/', async (req, res, next) => {

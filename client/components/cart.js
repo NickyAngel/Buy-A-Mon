@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchCart, updateCart, clearItem } from '../store/cart';
+import { fetchCart, updateCart, clearItem, closeCart } from '../store/cart';
 import { me } from '../store/auth';
 
 export class Cart extends React.Component {
@@ -198,7 +198,7 @@ const mapDispatch = dispatch => {
     update: (thingToUpdate, userId) =>
       dispatch(updateCart(thingToUpdate, userId)),
     delete: (itemId, userId) => dispatch(clearItem(itemId, userId)),
-    //closeCart: id => dispatch(closeCart(id)),
+    closeCart: id => dispatch(closeCart(id)),
   };
 };
 

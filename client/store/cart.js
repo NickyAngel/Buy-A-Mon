@@ -7,6 +7,7 @@ let DELETE_CART = 'DELETE_CART';
 let UPDATE_CART = 'UPDATE_CART';
 let CLEAR_CART = 'CLEAR_CART';
 let ADD_CART = 'ADD_CART';
+let CLOSE_CART = 'CLOSE_CART';
 
 //ACTION CREATOR: SET ALL CART
 export const setCart = CART => {
@@ -54,10 +55,26 @@ export const removeItem = CART => {
   };
 };
 //THUNK: DELETE REQUEST FOR CLEARING AN ITEM
-export const clearItem = (itemId,userId) => {
+export const clearItem = (itemId, userId) => {
   return async dispatch => {
     const { data } = await axios.delete(`/api/users/${userId}/cart/${itemId}`);
     dispatch(removeItem(data));
+  };
+};
+
+//CLOSE ORDER ON CHECKOUT
+export const endCart = CART => {
+  return {
+    type: CLOSE_CART,
+    CART,
+  };
+};
+
+//THUNK: PUT REQUEST FOR CLOSING ORDER
+export const closeCart = id => {
+  return async dispatch => {
+    const { data } = await axios.put(`/api/users/${id}`);
+    dispatch(endCart(data));
   };
 };
 
@@ -70,15 +87,17 @@ export default function cartReducer(state = initialState, action) {
     //   return [...state, action.CART];
     case UPDATE_CART:
       return action.CART;
-      // return state.map(CART =>
-      //   CART.id === action.CART.id ? action.CART : CART
-      // );
-      //[{a: 1}, {b:2}, {c:3}]
-      //[{a:new}, {b:2}, {c:3}]
+    // return state.map(CART =>
+    //   CART.id === action.CART.id ? action.CART : CART
+    // );
+    //[{a: 1}, {b:2}, {c:3}]
+    //[{a:new}, {b:2}, {c:3}]
     case CLEAR_CART:
       return action.CART;
     // case DELETE_CART:
     //   return state.filter((CART) => CART.id !== action.id);
+    case CLOSE_CART:
+      return action.CART;
     default:
       return state;
   }
