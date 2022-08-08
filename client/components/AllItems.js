@@ -18,6 +18,12 @@ export class AllItems extends React.Component {
   render() {
     let { items } = this.props;
     return (
+      //  {this.props.user.role === "admin" ? (
+
+      // ) : (
+      //   ''
+      //   )}
+      // <div>
       <div>
         <h1>Pokemon Cards</h1>
 

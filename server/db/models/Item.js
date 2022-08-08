@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
-const db = require('../db');
+const Sequelize = require("sequelize");
+const db = require("../db");
 
-const Item = db.define('item', {
+const Item = db.define("item", {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -17,11 +17,11 @@ const Item = db.define('item', {
   imageUrl: {
     type: Sequelize.TEXT,
     defaultValue:
-      'https://ecdn.teacherspayteachers.com/thumbitem/Pokemon-Theme-Amazing-Work-Coming-Soon-Signs-7112257-1628095729/original-7112257-1.jpg',
+      "https://ecdn.teacherspayteachers.com/thumbitem/Pokemon-Theme-Amazing-Work-Coming-Soon-Signs-7112257-1628095729/original-7112257-1.jpg",
   },
   description: {
     type: Sequelize.TEXT,
-    defaultValue: 'coming soon',
+    defaultValue: "coming soon",
   },
 });
 

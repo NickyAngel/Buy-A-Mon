@@ -3,6 +3,17 @@ const {
   models: { User, Item },
 } = require("../db");
 module.exports = router;
+// import { requireToken, adminCheck } from "./gatekeeping.js";
+const requireToken = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    const user = await User.findByToken(token);
+    req.user = user;
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
 
 function adminCheck(req, res, next) {
   if (req.user.role === "admin") {
@@ -12,7 +23,7 @@ function adminCheck(req, res, next) {
   }
 }
 
-router.get("/", adminCheck, async (req, res, next) => {
+router.get("/", requireToken, adminCheck, async (req, res, next) => {
   try {
     const users = await User.findAll({
       attributes: ["id", "firstName", "lastName", "email"],
@@ -23,19 +34,24 @@ router.get("/", adminCheck, async (req, res, next) => {
   }
 });
 
-router.post("/:id/create/", adminCheck, async (req, res, next) => {
-  try {
-    //decide what the req body looks like
-    const item = await Item.create(req.body);
-    res.status(201).send(item);
-  } catch (err) {
-    next(err);
+router.post(
+  "/:id/create/",
+  requireToken,
+  adminCheck,
+  async (req, res, next) => {
+    try {
+      //decide what the req body looks like
+      const item = await Item.create(req.body);
+      res.status(201).send(item);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
 //Update the item as an admin
 //PUT api/items/:id/
-router.put("/:id/", adminCheck, async (req, res, next) => {
+router.put("/:id/", requireToken, adminCheck, async (req, res, next) => {
   try {
     //decide what the req body looks like
     const item = await Item.findByPk(req.params.id);
@@ -54,7 +70,7 @@ router.put("/:id/", adminCheck, async (req, res, next) => {
 
 //Delete the item if admin is deleting
 //DELETE api/items/:id
-router.delete("/:id/", adminCheck, async (req, res, next) => {
+router.delete("/:id/", requireToken, adminCheck, async (req, res, next) => {
   try {
     const item = await Item.findByPk(req.params.id);
     await item.destroy(req.params.id);
@@ -67,14 +83,3 @@ router.delete("/:id/", adminCheck, async (req, res, next) => {
 module.exports = router;
 
 // talk to team about token and logged in
-
-// const requireToken = async (req, res, next) => {
-//     try {
-//       const token = req.headers.authorization;
-//       const user = await User.findByToken(token);
-//       req.user = user;
-//       next();
-//     } catch (e) {
-//       next(e);
-//     }
-//   };

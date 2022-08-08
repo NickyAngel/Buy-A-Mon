@@ -2,6 +2,7 @@ import axios from "axios";
 
 let initialState = [];
 
+let CREATE_ITEM = "CREATE_ITEM";
 let SET_ITEMS = "SET_ITEMS";
 let DELETE_ITEM = "DELETE_ITEM";
 let UPDATE_ITEM = "UPDATE_ITEM";
@@ -14,11 +15,19 @@ export const setAllItems = (items) => {
     items,
   };
 };
+//ACTION CREATOR: SET ALL ITEMS
+export const createitem = (items) => {
+  return {
+    type: CREATE_ITEM,
+    items,
+  };
+};
+
 //THUNK: GRAB ALL ITEMS
 export const fetchAllItems = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get('/api/items/');
+      const { data } = await axios.get("/api/items/");
       dispatch(setAllItems(data));
     } catch (err) {
       console.log(err);
@@ -34,7 +43,7 @@ export const addItem = (item) => {
   };
 };
 //THUNK ADD ITEM (ADMINISTRATOR)
-export const createitem = (item) => {
+export const createItem = (item) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post(`/api/items/:id/create/`, item);
@@ -90,6 +99,8 @@ export default function itemsReducer(state = initialState, action) {
       return state.map((Item) =>
         Item.id === action.Item.id ? action.Item : Item
       );
+    case CREATE_ITEM:
+      return [...state, action.campus];
     case DELETE_ITEM:
       return state.filter((Item) => Item.id !== action.id);
     default:

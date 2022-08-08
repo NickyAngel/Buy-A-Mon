@@ -1,29 +1,31 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import { fetchAllUsers } from "../store/users";
-
 export class AllUsers extends React.Component {
   componentDidMount() {
     this.props.getUsers();
   }
   render() {
     let { users } = this.props;
+    // const { isLoggedIn } = this.props;
     return (
       <div>
-        <h1>Buy-A-Mon Users</h1>
-
-        <div id="allUsers">
-          {users.map((user) => {
-            return (
-              <div className="allUsers" key={user.id}>
-                <p> {user.firstName}</p>
-                <p> {user.lastName}</p>
-                <p>{user.email}</p>
-              </div>
-            );
-          })}
-        </div>
+        {this.props.user.role === "admin" ? (
+          <div id="allUsers">
+            {users.map((user) => {
+              return (
+                <div className="allUsers" key={user.id}>
+                  <p>
+                    {user.firstName} {user.lastName}
+                  </p>
+                  <p>{user.email}</p>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          "Unauthorized Access"
+        )}
       </div>
     );
   }
@@ -31,12 +33,16 @@ export class AllUsers extends React.Component {
 const mapState = (state) => {
   return {
     users: state.users,
+    isLoggedIn: !!state.auth.id,
+    user: state.auth,
   };
 };
 
 const mapDispatch = (dispatch) => {
   return {
     getUsers: () => dispatch(fetchAllUsers()),
+    // isLoggedIn: !!state.user.id,
+    // user: state.auth,
   };
 };
 
