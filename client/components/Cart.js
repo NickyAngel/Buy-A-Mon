@@ -21,7 +21,6 @@ export class Cart extends React.Component {
       await this.props.getCart(userId);
     }
     let guestCart = JSON.parse(window.localStorage.getItem('cart'));
-    console.log(this.state.id);
     if (guestCart && !this.state.id) {
       for (let i = 0; i < guestCart.length; i++) {
         this.state.subtotal += guestCart[i].price * guestCart[i].qty;
@@ -29,7 +28,6 @@ export class Cart extends React.Component {
       this.setState({ guestCart: guestCart });
       window.localStorage.setItem('cart', JSON.stringify(guestCart));
     } else {
-      console.log('this.props.cart: ', this.props.cart);
       let temp = 0;
       for (let i = 0; i < this.props.cart.length; i++) {
         temp += this.props.cart[i].totalPriceAtSaleTime;
@@ -40,7 +38,6 @@ export class Cart extends React.Component {
 
   render() {
     let { cart } = this.props || {};
-    let subtotal = 0;
     let guestJSX = (
       <div>
         <h1>Guest Cart</h1>
@@ -51,7 +48,6 @@ export class Cart extends React.Component {
         )}
         <div id="cartItems">
           {this.state.guestCart.map(item => {
-            console.log(item);
             return (
               <div className="cartItems" key={item.id}>
                 <Link to={`/items/${item.id}`}>
@@ -152,7 +148,6 @@ export class Cart extends React.Component {
         {cart.length === 0 ? <h2>Your Cart is empty</h2> : <span />}
         <div id="cartItems">
           {cart.map(item => {
-            //console.log(item);
             return (
               <div className="cartItems" key={item.id}>
                 <Link to={`/items/${item.id}`}>
@@ -216,7 +211,6 @@ export class Cart extends React.Component {
         )}
       </div>
     );
-    console.log(this.state);
     return this.state.id ? userJSX : guestJSX;
   }
 }
