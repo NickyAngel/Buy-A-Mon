@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { fetchAllUsers } from "../store/users";
+
 export class AllUsers extends React.Component {
   componentDidMount() {
     this.props.getUsers();

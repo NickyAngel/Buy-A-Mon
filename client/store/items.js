@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 
 let initialState = [];
 
@@ -56,15 +56,17 @@ export const createItem = (item) => {
 
 //UPDATE ITEM (ADMINISTRATOR)
 export const reformItem = (item) => {
+  console.log("afterthunk");
   return {
     type: UPDATE_ITEM,
     item,
   };
 };
 //THUNK: PUT REQUEST
-export const updateItem = (item) => {
+export const updateItem = (item, id) => {
+  console.log("before thunk");
   return async (dispatch) => {
-    const { data } = await axios.put(`/api/items/${item.id}/`, item);
+    const { data } = await axios.put(`/api/items/${id}`, item);
     dispatch(reformItem(data));
   };
 };
