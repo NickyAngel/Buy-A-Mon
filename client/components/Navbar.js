@@ -10,7 +10,6 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
     <nav>
       {isLoggedIn ? (
         <div>
-          {/* The navbar will show these links after you log in */}
           <Link to="/home">Home</Link>
           <a href="#" onClick={handleClick}>
             Logout
@@ -24,9 +23,6 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
           <Link to="/signup">Sign Up</Link>
           <Link to="/allitems">All Items</Link>
           <Link to="/cart">Cart</Link>
-          {/* <Link to="/editItem">
-            <button className="creatItemButton">Edit Item</button>
-          </Link> */}
         </div>
       )}
     </nav>
@@ -40,6 +36,7 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
 const mapState = state => {
   return {
     isLoggedIn: !!state.auth.id,
+    user: state.auth,
   };
 };
 
