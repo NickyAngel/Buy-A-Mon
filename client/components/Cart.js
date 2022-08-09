@@ -18,17 +18,23 @@ export class Cart extends React.Component {
     if (user) {
       const userId = user.auth.id;
       this.setState({ id: userId });
-      this.props.getCart(userId);
+      await this.props.getCart(userId);
     }
     let guestCart = JSON.parse(window.localStorage.getItem('cart'));
-    // console.log(guestCart);
-    if (guestCart) {
-      this.state.subtotal = 0;
+    console.log(this.state.id);
+    if (guestCart && !this.state.id) {
       for (let i = 0; i < guestCart.length; i++) {
         this.state.subtotal += guestCart[i].price * guestCart[i].qty;
       }
       this.setState({ guestCart: guestCart });
       window.localStorage.setItem('cart', JSON.stringify(guestCart));
+    } else {
+      console.log('this.props.cart: ', this.props.cart);
+      let temp = 0;
+      for (let i = 0; i < this.props.cart.length; i++) {
+        temp += this.props.cart[i].totalPriceAtSaleTime;
+      }
+      this.setState({ subtotal: temp });
     }
   }
 
@@ -163,7 +169,7 @@ export class Cart extends React.Component {
                         { qty: ++item.qty, id: item.id, add: true, ...item },
                         this.state.id
                       );
-                      subtotal += item.price;
+                      this.state.subtotal += item.price;
                     }}
                   >
                     Add 1
@@ -175,7 +181,7 @@ export class Cart extends React.Component {
                           { qty: --item.qty, id: item.id, add: false, ...item },
                           this.state.id
                         );
-                        subtotal -= item.price;
+                        this.state.subtotal -= item.price;
                       }}
                     >
                       Minus 1
@@ -186,7 +192,7 @@ export class Cart extends React.Component {
                   <button
                     onClick={evt => {
                       this.props.delete(item.id, this.state.id);
-                      subtotal -= item.totalPriceAtSaleTime;
+                      this.state.subtotal -= item.totalPriceAtSaleTime;
                     }}
                   >
                     Remove Pokemon
@@ -196,7 +202,7 @@ export class Cart extends React.Component {
             );
           })}
         </div>
-        <h3>${subtotal / 100}</h3>
+        <h3>Subtotal: ${this.state.subtotal / 100}</h3>
         {cart.length !== 0 ? (
           <button
             onClick={() => {
