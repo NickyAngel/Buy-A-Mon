@@ -71,9 +71,11 @@ class EditItem extends React.Component {
               onChange={this.handleChange}
             ></input>
             <button
-              onClick={() => {
+              onClick={(evt) => {
+                evt.preventDefault()
                 console.log(this.state, this.props.item.id);
-                this.props.updateItem(this.state, this.props.id);
+                this.props.updateItem(this.state, this.props.item.id);
+
               }}
             >
               Edit Item

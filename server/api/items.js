@@ -43,6 +43,15 @@ router.post("/:id/create/", async (req, res, next) => {
 router.put("/:id/", async (req, res, next) => {
   try {
     console.log(req.body);
+    const item = await Item.findByPk(req.params.id);
+    console.log(item)
+     await item.update({...item,...req.body})
+     //add in prefilled out sections
+    // item.update({name: req.body.name,
+    //   price: req.body.price,
+    //   imageUrl: req.body.imageUrl,
+    //   description: req.body.description,
+    //    ...item})
     //decide what the req body looks like
     // const item = await Item.findByPk(req.params.id);
     //what are we able to change per cart? Quantity?
@@ -53,6 +62,9 @@ router.put("/:id/", async (req, res, next) => {
     // price: req.body.price,
     // })
     // );
+    // const AllItems = await Item.findAll();
+    
+    res.send(item)
   } catch (err) {
     next(err);
   }
