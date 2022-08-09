@@ -42,16 +42,17 @@ router.post("/:id/create/", async (req, res, next) => {
 //PUT api/items/:id/
 router.put("/:id/", async (req, res, next) => {
   try {
+    console.log(req.body);
     //decide what the req body looks like
-    const item = await Item.findByPk(req.params.id);
+    // const item = await Item.findByPk(req.params.id);
     //what are we able to change per cart? Quantity?
-    res.send(
-      await item.update({
-        ...req.body,
-        // title: req.body.title,
-        // price: req.body.price,
-      })
-    );
+    // res.send(
+    // await item.update({
+    //   ...req.body,
+    // title: req.body.title,
+    // price: req.body.price,
+    // })
+    // );
   } catch (err) {
     next(err);
   }
