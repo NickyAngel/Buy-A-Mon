@@ -47,7 +47,16 @@ export const addItem = item => {
 export const createItem = item => {
   return async dispatch => {
     try {
-      const { data } = await axios.post(`/api/items/create/`, item);
+      const token = window.localStorage.getItem('token');
+      const { data } = await axios.post(
+        `/api/items/create/`,
+        { ...item },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
       dispatch(addItem(data));
     } catch (err) {
       console.log(err);

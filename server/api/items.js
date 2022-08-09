@@ -2,8 +2,27 @@ const router = require('express').Router();
 const {
   models: { Item },
 } = require('../db');
+const User = require('../db/models/User');
 module.exports = router;
 
+const requireToken = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    console.log(token);
+    const user = await User.findByToken(token);
+    req.user = user;
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
+const adminCheck = (req, res, next) => {
+  if (req.user.role === 'admin') {
+    next();
+  } else {
+    return res.status(403).send('YOU SHALL NOT PASS');
+  }
+};
 //Grabbing all items from the DB
 //api/items/
 router.get('/', async (req, res, next) => {
@@ -30,7 +49,7 @@ router.get('/:id', async (req, res, next) => {
 //Create the item as an admin
 //POST api/items/:id/
 
-router.post('/create/', async (req, res, next) => {
+router.post('/create/', requireToken, adminCheck, async (req, res, next) => {
   try {
     const item = await Item.create(req.body);
     res.status(201).send(item);
@@ -42,7 +61,7 @@ router.post('/create/', async (req, res, next) => {
 //Update the item as an admin
 //PUT api/items/:id/
 
-router.put('/:id/', async (req, res, next) => {
+router.put('/:id/', requireToken, adminCheck, async (req, res, next) => {
   try {
     const item = await Item.findByPk(req.params.id);
     const picture = req.body.imageUrl == '' ? item.imageUrl : req.body.imageUrl;
@@ -65,15 +84,15 @@ router.put('/:id/', async (req, res, next) => {
 //Delete the item if admin is deleting
 //DELETE api/items/:id
 
-// router.delete("/:id/", async (req, res, next) => {
-//   try {
-//     const item = await Item.findByPk(req.params.id);
-//     await item.destroy(req.params.id);
-//     res.send(item);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+router.delete('/:id/', requireToken, adminCheck, async (req, res, next) => {
+  try {
+    const item = await Item.findByPk(req.params.id);
+    await item.destroy(req.params.id);
+    res.send(item);
+  } catch (err) {
+    next(err);
+  }
+});
 
 //add in prefilled out sections
 // item.update({name: req.body.name,
