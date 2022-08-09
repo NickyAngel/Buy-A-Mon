@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 
 const requireToken = async (req, res, next) => {
   try {
-    console.log(req.headers);
     const token = req.headers.authorization;
     const user = await User.findByToken(token);
     req.user = user;
@@ -28,9 +27,6 @@ const adminCheck = (req, res, next) => {
 router.get('/', requireToken, adminCheck, async (req, res, next) => {
   try {
     const users = await User.findAll({
-      //   // explicitly select only the id and email fields - even though
-      //   // users' passwords are encrypted, it won't help if we just
-      //   // send everything to anyone who asks!
       attributes: ['id', 'email', 'firstName', 'lastName', 'role'],
     });
     res.json(users);
@@ -41,7 +37,7 @@ router.get('/', requireToken, adminCheck, async (req, res, next) => {
 
 //Grabbing a users data/profile when logged in
 //GET api/users/:id
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', requireToken, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
     res.json(user);
@@ -61,20 +57,18 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-//Update the user once the form is updated
-//PUT api/users/:id
-/* no update user functionality yet */
-// router.put('/:id', async (req, res, next) => {
-//   try {
-//     const cart = await Order.findOne({
-//       where: { userId: req.params.id, open: true },
-//     });
-//     cart.update({ ...cart, open: false });
-//     res.json([]);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+//checkout the cart functionality
+router.put('/:id', requireToken, async (req, res, next) => {
+  try {
+    const cart = await Order.findOne({
+      where: { userId: req.params.id, open: true },
+    });
+    cart.update({ ...cart, open: false });
+    res.json([]);
+  } catch (err) {
+    next(err);
+  }
+});
 //Update the user once the form is updated
 //PUT api/users/:id
 // router.put('/:id', async (req, res, next) => {
@@ -132,7 +126,7 @@ router.get('/:id/cart/', requireToken, async (req, res, next) => {
 
 //Update the cart per item added to each cart
 //PUT api/users/:id/cart/
-router.put('/:id/cart/', async (req, res, next) => {
+router.put('/:id/cart/', requireToken, async (req, res, next) => {
   try {
     const cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
@@ -177,35 +171,36 @@ router.put('/:id/cart/', async (req, res, next) => {
 
 // Are we trying to destroy carts per user? or maybe we can empty a cart at checkout
 //PUT api/users/:id/cart/ EMPTY CART AT CHECKOUT
-router.put('/:id/cart/', async (req, res, next) => {
-  try {
-    console.log(req.params);
-    const cart = await Order.findOne({
-      where: { userId: req.params.id, open: true },
-    });
-    await OrderItem.destroy({
-      where: { itemId: req.params.itemId, orderId: cart.id },
-    });
-    const items = await OrderItem.findAll({
-      where: { orderId: cart.id },
-    });
-    const itemDetails = [];
-    await Promise.all(
-      items.map(async item => {
-        let eachMon = await Item.findByPk(item.itemId);
-        eachMon.dataValues.priceAtSaleTime = item.price;
-        eachMon.dataValues.qty = item.qty;
-        eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
-        itemDetails.push(eachMon);
-      })
-    );
-    res.json(itemDetails);
-  } catch (err) {
-    next(err);
-  }
-});
+/* duplicate code?? */
+// router.put('/:id/cart/', async (req, res, next) => {
+//   try {
+//     console.log(req.params);
+//     const cart = await Order.findOne({
+//       where: { userId: req.params.id, open: true },
+//     });
+//     await OrderItem.destroy({
+//       where: { itemId: req.params.itemId, orderId: cart.id },
+//     });
+//     const items = await OrderItem.findAll({
+//       where: { orderId: cart.id },
+//     });
+//     const itemDetails = [];
+//     await Promise.all(
+//       items.map(async item => {
+//         let eachMon = await Item.findByPk(item.itemId);
+//         eachMon.dataValues.priceAtSaleTime = item.price;
+//         eachMon.dataValues.qty = item.qty;
+//         eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
+//         itemDetails.push(eachMon);
+//       })
+//     );
+//     res.json(itemDetails);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
-router.post('/:id/cart', async (req, res, next) => {
+router.post('/:id/cart', requireToken, async (req, res, next) => {
   try {
     let cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
@@ -213,13 +208,10 @@ router.post('/:id/cart', async (req, res, next) => {
     if (!cart) {
       cart = await Order.create();
     }
-
     const itemOrder = await OrderItem.findOne({
       where: { itemId: req.body.id, orderId: cart.id },
     });
-
     let itemToAdd = await Item.findByPk(req.body.id);
-
     if (itemOrder) {
       let newQty = 0;
       newQty = itemOrder.qty + req.body.qty;
@@ -236,7 +228,6 @@ router.post('/:id/cart', async (req, res, next) => {
           totalPrice: itemToAdd.price,
         },
       });
-
       cart.setUser(user);
     }
     res.json(itemToAdd);
@@ -245,9 +236,8 @@ router.post('/:id/cart', async (req, res, next) => {
   }
 });
 //DELETE ROUTE FOR CART ITEM
-router.delete('/:id/cart/:itemId', async (req, res, next) => {
+router.delete('/:id/cart/:itemId', requireToken, async (req, res, next) => {
   try {
-    console.log(req.params);
     const cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
     });

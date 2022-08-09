@@ -65,7 +65,6 @@ export const createItem = item => {
 
 //UPDATE ITEM (ADMINISTRATOR)
 export const reformItem = item => {
-  console.log('afterthunk');
   return {
     type: UPDATE_ITEM,
     item,

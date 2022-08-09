@@ -1,17 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
 
 let initialState = [];
 
-let SET_CART = "SET_CART";
-let DELETE_CART = "DELETE_CART";
-let UPDATE_CART = "UPDATE_CART";
-let CLEAR_CART = "CLEAR_CART";
-let ADD_CART = "ADD_CART";
-let ADD_ITEM_TO_CART = "ADD_ITEM_TO_CART";
+let SET_CART = 'SET_CART';
+let DELETE_CART = 'DELETE_CART';
+let UPDATE_CART = 'UPDATE_CART';
+let CLEAR_CART = 'CLEAR_CART';
+let ADD_CART = 'ADD_CART';
+let ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART';
 let CLOSE_CART = 'CLOSE_CART';
 
 //ACTION CREATOR: ADD ITEM TO CART
-export const addItem = (item) => {
+export const addItem = item => {
   return {
     type: ADD_ITEM_TO_CART,
     item,
@@ -20,11 +20,13 @@ export const addItem = (item) => {
 
 //THUNK: ADD ITEM TO CART
 export const addItemToCart = (item, id) => {
-  return async (dispatch) => {
+  return async dispatch => {
     try {
-   
-      const { data } = await axios.post(`/api/users/${id}/cart`, item);
-     
+      const token = window.localStorage.getItem('token');
+      const { data } = await axios.post(`/api/users/${id}/cart`, item, {
+        headers: { authorization: token },
+      });
+
       dispatch(addItem(data));
     } catch (err) {
       console.log(err);
@@ -33,7 +35,7 @@ export const addItemToCart = (item, id) => {
 };
 
 //ACTION CREATOR: SET ALL CART
-export const setCart = (CART) => {
+export const setCart = CART => {
   return {
     type: SET_CART,
     CART,
@@ -43,7 +45,7 @@ export const setCart = (CART) => {
 export const fetchCart = id => {
   return async dispatch => {
     try {
-      const token = window.localStorage.getItem("token");
+      const token = window.localStorage.getItem('token');
       const { data } = await axios.get(`/api/users/${id}/cart`, {
         headers: { authorization: token },
       });
@@ -55,7 +57,7 @@ export const fetchCart = id => {
 };
 
 //UPDATE CART WITH ADDING/REMOVING ITEMS
-export const reformCart = (CART) => {
+export const reformCart = CART => {
   return {
     type: UPDATE_CART,
     CART,
@@ -64,7 +66,10 @@ export const reformCart = (CART) => {
 //THUNK: PUT REQUEST FOR ADDING/REMVING ITEMS
 export const updateCart = (CART, id) => {
   return async dispatch => {
-    const { data } = await axios.put(`/api/users/${id}/cart`, CART);
+    const token = window.localStorage.getItem('token');
+    const { data } = await axios.put(`/api/users/${id}/cart`, CART, {
+      headers: { authorization: token },
+    });
     dispatch(reformCart(data));
   };
 };
@@ -79,7 +84,10 @@ export const removeItem = CART => {
 //THUNK: DELETE REQUEST FOR CLEARING AN ITEM
 export const clearItem = (itemId, userId) => {
   return async dispatch => {
-    const { data } = await axios.delete(`/api/users/${userId}/cart/${itemId}`);
+    const token = window.localStorage.getItem('token');
+    const { data } = await axios.delete(`/api/users/${userId}/cart/${itemId}`, {
+      headers: { authorization: token },
+    });
     dispatch(removeItem(data));
   };
 };
@@ -95,7 +103,10 @@ export const endCart = CART => {
 //THUNK: PUT REQUEST FOR CLOSING ORDER
 export const closeCart = id => {
   return async dispatch => {
-    const { data } = await axios.put(`/api/users/${id}`);
+    const token = window.localStorage.getItem('token');
+    const { data } = await axios.put(`/api/users/${id}`,{
+      headers: { authorization: token },
+    });
     dispatch(endCart(data));
   };
 };

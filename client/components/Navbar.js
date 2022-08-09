@@ -1,7 +1,7 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { logout } from "../store";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { logout } from '../store';
 
 const Navbar = ({ handleClick, isLoggedIn }) => (
   <div>
@@ -10,7 +10,7 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
     <nav>
       {isLoggedIn ? (
         <div>
-          <Link to="/home">Home</Link>
+          <Link to="/home">All Products</Link>
           <a href="#" onClick={handleClick}>
             Logout
           </a>
@@ -18,7 +18,7 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
         </div>
       ) : (
         <div>
-          <Link to="/home">Home</Link>
+          <Link to="/home">All Products</Link>
           <Link to="/login">Login</Link>
           <Link to="/signup">Sign Up</Link>
           <Link to="/cart">Cart</Link>
@@ -32,14 +32,14 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
 /**
  * CONTAINER
  */
-const mapState = (state) => {
+const mapState = state => {
   return {
     isLoggedIn: !!state.auth.id,
     user: state.auth,
   };
 };
 
-const mapDispatch = (dispatch) => {
+const mapDispatch = dispatch => {
   return {
     handleClick() {
       dispatch(logout());
