@@ -9,7 +9,8 @@ import CheckOut from "./components/CheckOut";
 import SingleItem from "./components/SingleItem";
 import Cart from "./components/Cart";
 import AllUsers from "./components/AllUsers";
-import createItem from "./components/createItem";
+import CreateItem from "./components/createItem";
+
 
 /**
  * COMPONENT
@@ -32,7 +33,8 @@ class Routes extends Component {
           <Route path="/items/:id" component={SingleItem} />
           <Route path="/cart" component={Cart} />
           <Route path="/users" component={AllUsers} />
-          <Route path="/createItem" component={createItem} />
+          <Route path="/createItem" component={CreateItem} />
+          <Route path="/checkout" component={CheckOut} />
         </Switch>
       </div>
     );
