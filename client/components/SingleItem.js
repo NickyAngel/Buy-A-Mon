@@ -35,7 +35,6 @@ class SingleItem extends React.Component {
         guestCart.push(temp);
       }
       window.localStorage.setItem('cart', JSON.stringify(guestCart));
-      // console.log(window.localStorage.cart);
       alert('added to cart');
     } else {
       const id = user.auth.id;
@@ -86,7 +85,6 @@ class SingleItem extends React.Component {
         </button>
         <button
           onClick={async () => {
-            console.log(item.id);
             await this.props.deleteItem(item);
           }}
         >
