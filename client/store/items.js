@@ -10,7 +10,6 @@ let ADD_ITEM = 'ADD_ITEM';
 
 //ACTION CREATOR: SET ALL ITEMS
 export const setAllItems = items => {
-  console.log(items[0]);
   return {
     type: SET_ITEMS,
     items,
@@ -74,10 +73,17 @@ export const reformItem = item => {
 };
 //THUNK: PUT REQUEST
 export const updateItem = (item, id) => {
-  console.log('before thunk');
+  const token = window.localStorage.getItem('token');
   return async dispatch => {
-    const { data } = await axios.put(`/api/items/${id}`, item);
-    //const { data } = await axios.get("/api/items/");
+    const { data } = await axios.put(
+      `/api/items/${id}`,
+      { ...item },
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    );
     dispatch(reformItem(data));
   };
 };
@@ -93,7 +99,12 @@ export const removeItem = id => {
 export const deleteItem = id => {
   return async dispatch => {
     try {
-      await axios.delete(`/api/items/${id}/`);
+      const token = window.localStorage.getItem('token');
+      await axios.delete(`/api/items/${id}/`, {
+        headers: {
+          authorization: token,
+        },
+      });
       dispatch(removeItem(id));
     } catch (err) {
       console.log(err);

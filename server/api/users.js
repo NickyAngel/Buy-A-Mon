@@ -7,8 +7,8 @@ const jwt = require('jsonwebtoken');
 
 const requireToken = async (req, res, next) => {
   try {
+    console.log(req.headers);
     const token = req.headers.authorization;
-    console.log(token);
     const user = await User.findByToken(token);
     req.user = user;
     next();
@@ -54,7 +54,6 @@ router.get('/:id', async (req, res, next) => {
 //POST api/users/
 router.post('/', async (req, res, next) => {
   try {
-    //decide what the req body looks like
     const user = await User.create(req.body);
     res.status(201).json(user);
   } catch (err) {
@@ -64,17 +63,18 @@ router.post('/', async (req, res, next) => {
 
 //Update the user once the form is updated
 //PUT api/users/:id
-router.put('/:id', async (req, res, next) => {
-  try {
-    const cart = await Order.findOne({
-      where: { userId: req.params.id, open: true },
-    });
-    cart.update({ ...cart, open: false });
-    res.json([]);
-  } catch (err) {
-    next(err);
-  }
-});
+/* no update user functionality yet */
+// router.put('/:id', async (req, res, next) => {
+//   try {
+//     const cart = await Order.findOne({
+//       where: { userId: req.params.id, open: true },
+//     });
+//     cart.update({ ...cart, open: false });
+//     res.json([]);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 //Update the user once the form is updated
 //PUT api/users/:id
 // router.put('/:id', async (req, res, next) => {
@@ -90,50 +90,45 @@ router.put('/:id', async (req, res, next) => {
 
 //Delete the user if the user wants the account to be deleted
 //DELETE api/users/:id
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const user = await User.findByPk(req.params.id);
-    await user.destroy(req.params.id);
-    res.send(user);
-  } catch (err) {
-    next(err);
-  }
-});
+/* no deleting users functionality yet */
+// router.delete('/:id', async (req, res, next) => {
+//   try {
+//     const user = await User.findByPk(req.params.id);
+//     await user.destroy(req.params.id);
+//     res.send(user);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 /////////////////////////////////////////////// CART ROUTES ///////////////////////////////////////
 
 //grab the cart per single user
 //GET api/users/:id/cart/
-router.get(
-  '/:id/cart/',
-  /*requireToken,*/ async (req, res, next) => {
-    try {
-      // const tokenFromFrontEnd = req.headers.authorization;
-      // const payload = jwt.verify(tokenFromFrontEnd, process.env.JWT);
-      // if (payload.id === req.params.id) {
-      const cart = await Order.findOne({
-        where: { userId: req.params.id, open: true },
-      });
-      const items = await OrderItem.findAll({
-        where: { orderId: cart.id },
-      });
-      const itemDetails = [];
-      await Promise.all(
-        items.map(async item => {
-          let eachMon = await Item.findByPk(item.itemId);
-          eachMon.dataValues.priceAtSaleTime = item.price;
-          eachMon.dataValues.qty = item.qty;
-          eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
-          itemDetails.push(eachMon);
-        })
-      );
-      res.json(itemDetails);
-      // }
-    } catch (err) {
-      next(err);
-    }
+router.get('/:id/cart/', requireToken, async (req, res, next) => {
+  try {
+    const cart = await Order.findOne({
+      where: { userId: req.params.id, open: true },
+    });
+    const items = await OrderItem.findAll({
+      where: { orderId: cart.id },
+    });
+    const itemDetails = [];
+    await Promise.all(
+      items.map(async item => {
+        let eachMon = await Item.findByPk(item.itemId);
+        eachMon.dataValues.priceAtSaleTime = item.price;
+        eachMon.dataValues.qty = item.qty;
+        eachMon.dataValues.totalPriceAtSaleTime = item.totalPrice;
+        itemDetails.push(eachMon);
+      })
+    );
+    res.json(itemDetails);
+    // }
+  } catch (err) {
+    next(err);
   }
-);
+});
 
 //Update the cart per item added to each cart
 //PUT api/users/:id/cart/
