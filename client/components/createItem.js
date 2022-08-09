@@ -1,17 +1,17 @@
-import React from "react";
-import { connect } from "react-redux";
-import { createItem } from "../store/items";
+import React from 'react';
+import { connect } from 'react-redux';
+import { createItem } from '../store/items';
 
 class CreateItem extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: "",
-      price: "",
+      name: '',
+      price: '',
       imageUrl:
-        "https://ecdn.teacherspayteachers.com/thumbitem/Pokemon-Theme-Amazing-Work-Coming-Soon-Signs-7112257-1628095729/original-7112257-1.jpg",
-      description: "",
-      error: "validation error",
+        'https://ecdn.teacherspayteachers.com/thumbitem/Pokemon-Theme-Amazing-Work-Coming-Soon-Signs-7112257-1628095729/original-7112257-1.jpg',
+      description: '',
+      error: 'validation error',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,14 +27,14 @@ class CreateItem extends React.Component {
   async handleSubmit(evt) {
     evt.preventDefault();
     await this.props.fetchCreateItem(this.state);
-    this.props.history.push("/AllItems");
+    this.props.history.push('/home');
   }
   //&& this.props.user.role === 'admin
 
   render() {
     return (
       <div>
-        {this.props.isLoggedIn && this.props.user.role === "admin" ? (
+        {this.props.isLoggedIn && this.props.user.role === 'admin' ? (
           <form id="add-item" onSubmit={this.handleSubmit}>
             <label htmlFor="taskName">Name:</label>
             <input
@@ -70,20 +70,20 @@ class CreateItem extends React.Component {
             <button type="submit">Add Item</button>
           </form>
         ) : (
-          "Unauthorized access"
+          'Unauthorized access'
         )}
       </div>
     );
   }
 }
-const mapState = (state) => {
+const mapState = state => {
   return {
     isLoggedIn: !!state.auth.id,
     user: state.auth,
   };
 };
-const mapDispatch = (dispatch) => ({
-  fetchCreateItem: (item) => dispatch(createItem(item)),
+const mapDispatch = dispatch => ({
+  fetchCreateItem: item => dispatch(createItem(item)),
 });
 
 export default connect(mapState, mapDispatch)(CreateItem);

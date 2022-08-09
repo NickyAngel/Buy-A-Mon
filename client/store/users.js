@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios from 'axios';
 
 let initialState = [];
-let SET_USERS = "SET_USERS";
+let SET_USERS = 'SET_USERS';
 
 //action creator
-export const setAllUsers = (users) => {
+export const setAllUsers = users => {
   return {
     type: SET_USERS,
     users,
@@ -13,9 +13,14 @@ export const setAllUsers = (users) => {
 
 //thunk
 export const fetchAllUsers = () => {
-  return async (dispatch) => {
+  return async dispatch => {
     try {
-      const { data } = await axios.get("/api/users/");
+      const token = window.localStorage.getItem('token');
+      const { data } = await axios.get('/api/users/', {
+        headers: {
+          authorization: token,
+        },
+      });
       dispatch(setAllUsers(data));
     } catch (e) {
       console.log(e);
