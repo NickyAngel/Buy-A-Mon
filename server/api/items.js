@@ -9,11 +9,13 @@ module.exports = router;
 router.get("/", async (req, res, next) => {
   try {
     const items = await Item.findAll();
+   
     res.json(items);
   } catch (err) {
     next(err);
   }
 });
+
 
 //Grabbing a single item from the DB
 //api/items/:id
@@ -42,28 +44,12 @@ router.post("/:id/create/", async (req, res, next) => {
 //PUT api/items/:id/
 router.put("/:id/", async (req, res, next) => {
   try {
-    console.log(req.body);
     const item = await Item.findByPk(req.params.id);
-    console.log(item)
-     await item.update({...item,...req.body})
-     //add in prefilled out sections
-    // item.update({name: req.body.name,
-    //   price: req.body.price,
-    //   imageUrl: req.body.imageUrl,
-    //   description: req.body.description,
-    //    ...item})
-    //decide what the req body looks like
-    // const item = await Item.findByPk(req.params.id);
-    //what are we able to change per cart? Quantity?
-    // res.send(
-    // await item.update({
-    //   ...req.body,
-    // title: req.body.title,
-    // price: req.body.price,
-    // })
-    // );
-    // const AllItems = await Item.findAll();
+    const picture = req.body.imageUrl == '' ? item.imageUrl : req.body.imageUrl
+    const summary = req.body.description == '' ? item.description : req.body.description
     
+    await item.update({...item, ...req.body, imageUrl: picture, description: summary})
+
     res.send(item)
   } catch (err) {
     next(err);

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { updateItem } from "../store/items";
-// import { fetchSingleItem } from "../store/singleItem";
+import { fetchSingleItem } from "../store/singleItem";
 
 class EditItem extends React.Component {
   constructor() {
@@ -14,25 +14,14 @@ class EditItem extends React.Component {
       error: "validation error",
     };
 
-    // this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
-  //   componentDidMount() {
-  //     this.props.fetchSingleItem(this.props.match.params.id);
-  //   }
+  
   handleChange(evt) {
     this.setState({
       [evt.target.name]: evt.target.value,
     });
   }
-
-  // handleSubmit(evt) {
-  // evt.preventDefault();
-  // console.log(this.props.item);
-  /// this.props.updateItem(this.props.item);
-  // this.props.updateItem({this.props.item, ...this.state}, this.props.history)
-  // this.props.history.push("/allitems");
-  // }
 
   render() {
     return (
@@ -66,16 +55,16 @@ class EditItem extends React.Component {
             <label htmlFor="address">Description:</label>
             <input
               type="text"
-              name="price"
+              name="description"
               value={this.state.description}
               onChange={this.handleChange}
             ></input>
             <button
-              onClick={(evt) => {
+              onClick={async (evt) => {
                 evt.preventDefault()
                 console.log(this.state, this.props.item.id);
                 this.props.updateItem(this.state, this.props.item.id);
-
+                this.props.singleItem(this.props.item.id)
               }}
             >
               Edit Item
@@ -97,6 +86,8 @@ const mapState = (state) => {
 };
 const mapDispatch = (dispatch) => ({
   updateItem: (item, id) => dispatch(updateItem(item, id)),
+  singleItem: (id) => dispatch(fetchSingleItem(id)),
+
   //   singleItem: (id) => dispatch(fetchSingleItem(id)),
 });
 

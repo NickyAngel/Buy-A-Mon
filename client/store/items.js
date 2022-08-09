@@ -10,6 +10,7 @@ let ADD_ITEM = "ADD_ITEM";
 
 //ACTION CREATOR: SET ALL ITEMS
 export const setAllItems = (items) => {
+  console.log(items[0])
   return {
     type: SET_ITEMS,
     items,
@@ -67,6 +68,7 @@ export const updateItem = (item, id) => {
   console.log("before thunk");
   return async (dispatch) => {
     const { data } = await axios.put(`/api/items/${id}`, item);
+    //const { data } = await axios.get("/api/items/");
     dispatch(reformItem(data));
   };
 };
@@ -98,9 +100,7 @@ export default function itemsReducer(state = initialState, action) {
     case ADD_ITEM:
       return [...state, action.item];
     case UPDATE_ITEM:
-      return state.map((Item) =>
-        Item.id === action.Item.id ? action.Item : Item
-      );
+      return action.item
     case CREATE_ITEM:
       return [...state, action.campus];
     case DELETE_ITEM:
