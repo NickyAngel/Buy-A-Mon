@@ -36,8 +36,10 @@ class SingleItem extends React.Component {
         temp.qty = 1;
         guestCart.push(temp);
       }
+
       window.localStorage.setItem('cart', JSON.stringify(guestCart));
       alert('added to cart');
+
     } else {
       const id = user.auth.id;
 
@@ -85,7 +87,7 @@ class SingleItem extends React.Component {
             <button
               onClick={async () => {
                 await this.props.deleteItem(this.props.item.id);
-                this.props.history.push("/allItems");
+                
               }}
             >
               Delete Item
@@ -123,7 +125,6 @@ const mapDispatch = dispatch => ({
   getCart: id => dispatch(fetchCart(id)),
   getUser: () => dispatch(me()),
   deleteItem: (id) => dispatch(deleteItem(id)),
-  // editItem: (id) => dispatch(updateItem(id)),
 
 });
 

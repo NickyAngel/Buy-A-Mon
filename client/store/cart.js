@@ -22,9 +22,9 @@ export const addItem = (item) => {
 export const addItemToCart = (item, id) => {
   return async (dispatch) => {
     try {
-      console.log(item);
+   
       const { data } = await axios.post(`/api/users/${id}/cart`, item);
-      console.log(data);
+     
       dispatch(addItem(data));
     } catch (err) {
       console.log(err);

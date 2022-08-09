@@ -106,7 +106,7 @@ router.delete("/:id", async (req, res, next) => {
 router.get(
   "/:id/cart/",
   /*requireToken,*/ async (req, res, next) => {
-    // console.log('req.headers: ', req.headers);
+
     try {
       // const tokenFromFrontEnd = req.headers.authorization;
       // const payload = jwt.verify(tokenFromFrontEnd, process.env.JWT);
@@ -139,14 +139,14 @@ router.get(
 //PUT api/users/:id/cart/
 router.put("/:id/cart/", async (req, res, next) => {
   try {
-    //console.log(req.body);
+    
     const cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
     });
     const item = await OrderItem.findOne({
       where: { itemId: req.body.id, orderId: cart.id },
     });
-    // console.log(item);
+
     if (req.body.add) {
       await item.update({
         ...item,

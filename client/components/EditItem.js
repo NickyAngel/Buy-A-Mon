@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { updateItem } from "../store/items";
+import { fetchSingleItem } from "../store/singleItem";
+
 
 class EditItem extends React.Component {
   constructor() {
@@ -15,7 +17,7 @@ class EditItem extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
   }
-
+  
   handleChange(evt) {
     this.setState({
       [evt.target.name]: evt.target.value,
@@ -54,15 +56,18 @@ class EditItem extends React.Component {
             <label htmlFor="address">Description:</label>
             <input
               type="text"
-              name="price"
+              name="description"
               value={this.state.description}
               onChange={this.handleChange}
             ></input>
             <button
               onClick={async (evt) => {
-                evt.preventDefault();
-                // console.log(this.state, this.props.item.id);
-                await this.props.updateItem(this.state, this.props.item.id);
+
+                evt.preventDefault()
+                console.log(this.state, this.props.item.id);
+                this.props.updateItem(this.state, this.props.item.id);
+                this.props.singleItem(this.props.item.id)
+
               }}
             >
               Edit Item
@@ -84,6 +89,10 @@ const mapState = (state) => {
 };
 const mapDispatch = (dispatch) => ({
   updateItem: (item, id) => dispatch(updateItem(item, id)),
+
+  singleItem: (id) => dispatch(fetchSingleItem(id)),
+
+
 });
 
 export default connect(mapState, mapDispatch)(EditItem);

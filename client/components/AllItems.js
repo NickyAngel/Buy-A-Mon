@@ -10,11 +10,13 @@ export class AllItems extends React.Component {
       quantity: 1,
     };
   }
-  componentDidMount() {
-    this.props.getItems();
+  async componentDidMount() {
+    await this.props.getItems();
   }
   render() {
-    let { items } = this.props;
+    console.log(this.props)
+    let { items } = this.props || {};
+    console.log(items)
     return (
       <div>
         {this.props.user.role === "admin" ? (
@@ -30,7 +32,7 @@ export class AllItems extends React.Component {
                 <h1>Pokemon Cards</h1>
 
                 <div id="allItems">
-                  {items.map((item) => {
+                  {items.length > 0 ? (items.map((item) => {
                     return (
                       <div className="allItems" key={item.id}>
                         <Link to={`/items/${item.id}`}>
@@ -46,7 +48,7 @@ export class AllItems extends React.Component {
                         </div>
                       </div>
                     );
-                  })}
+                  })) : <span/>}
                 </div>
               </div>
             </div>
