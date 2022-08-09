@@ -1,17 +1,17 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
-import { withRouter, Route, Switch, Redirect } from "react-router-dom";
-import { Login, Signup } from "./components/AuthForm";
-import Home from "./components/Home";
-import { me } from "./store";
-import AllItems from "./components/AllItems";
-import CheckOut from "./components/CheckOut";
-import SingleItem from "./components/SingleItem";
-import Cart from "./components/Cart";
-import AllUsers from "./components/AllUsers";
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { withRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { Login, Signup } from './components/AuthForm';
+import Home from './components/Home';
+import { me } from './store';
+import AllItems from './components/AllItems';
+import CheckOut from './components/CheckOut';
+import SingleItem from './components/SingleItem';
+import Cart from './components/Cart';
+import AllUsers from './components/AllUsers';
 
-import createItem from "./components/createItem";
-import editItem from "./components/EditItem";
+import createItem from './components/createItem';
+import editItem from './components/EditItem';
 
 /**
  * COMPONENT
@@ -27,6 +27,9 @@ class Routes extends Component {
     return (
       <div>
         <Switch>
+          <Route exact path="/">
+            <Redirect to="/home" />
+          </Route>
           <Route path="/home" exact component={AllItems} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
@@ -45,7 +48,7 @@ class Routes extends Component {
 /**
  * CONTAINER
  */
-const mapState = (state) => {
+const mapState = state => {
   return {
     // Being 'logged in' for our purposes will be defined has having a state.auth that has a truthy id.
     // Otherwise, state.auth will be an empty object, and state.auth.id will be falsey
@@ -53,7 +56,7 @@ const mapState = (state) => {
   };
 };
 
-const mapDispatch = (dispatch) => {
+const mapDispatch = dispatch => {
   return {
     loadInitialData() {
       dispatch(me());
