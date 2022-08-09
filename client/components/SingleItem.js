@@ -38,11 +38,6 @@ class SingleItem extends React.Component {
       alert('added to cart');
     } else {
       const id = user.auth.id;
-      let addQty = parseInt(event.target);
-
-      if (!addQty) {
-        addQty = 1;
-      }
 
       const newItemOrder = {
         id: this.props.item.id,
@@ -50,10 +45,10 @@ class SingleItem extends React.Component {
         price: this.props.item.price,
         imageUrl: this.props.item.imageUrl,
         description: this.props.item.description,
-        qty: addQty,
+        qty: 1,
       };
       this.props.addItem(newItemOrder, id);
-      alert('added to cart')
+      alert('added to cart');
     }
   }
   // componentDidMount() {
