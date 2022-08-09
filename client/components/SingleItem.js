@@ -8,6 +8,7 @@ import { me } from "../store/auth";
 import { deleteItem } from "../store/items";
 // import { updateItem } from "../store/items";
 import EditItem from "./EditItem";
+
 class SingleItem extends React.Component {
   constructor() {
     super();
@@ -35,15 +36,10 @@ class SingleItem extends React.Component {
         temp.qty = 1;
         guestCart.push(temp);
       }
-      window.localStorage.setItem("cart", JSON.stringify(guestCart));
-      console.log(window.localStorage.cart);
+      window.localStorage.setItem('cart', JSON.stringify(guestCart));
+      alert('added to cart');
     } else {
       const id = user.auth.id;
-      let addQty = parseInt(event.target);
-
-      if (!addQty) {
-        addQty = 1;
-      }
 
       const newItemOrder = {
         id: this.props.item.id,
@@ -51,9 +47,10 @@ class SingleItem extends React.Component {
         price: this.props.item.price,
         imageUrl: this.props.item.imageUrl,
         description: this.props.item.description,
-        qty: addQty,
+        qty: 1,
       };
       this.props.addItem(newItemOrder, id);
+      alert('added to cart');
     }
   }
   // componentDidMount() {
@@ -68,12 +65,6 @@ class SingleItem extends React.Component {
     } else {
       this.props.singleItem(this.props.match.params.id);
     }
-  }
-  async componentDidMount() {
-    const user = await this.props.getUser();
-    const id = user.auth.id;
-    this.props.singleItem(this.props.match.params.id);
-    this.props.getCart(id);
   }
   render() {
     const name = this.props.item.name;
@@ -112,24 +103,28 @@ class SingleItem extends React.Component {
             </button>
           </div>
         )}
+
       </div>
     );
   }
 }
+
 const mapState = (state) => {
+
   return {
     cart: state.cart,
     item: state.singleItem,
     user: state.auth,
   };
 };
-const mapDispatch = (dispatch) => ({
-  singleItem: (id) => dispatch(fetchSingleItem(id)),
+const mapDispatch = dispatch => ({
+  singleItem: id => dispatch(fetchSingleItem(id)),
   addItem: (item, userId) => dispatch(addItemToCart(item, userId)),
-  getCart: (id) => dispatch(fetchCart(id)),
+  getCart: id => dispatch(fetchCart(id)),
   getUser: () => dispatch(me()),
   deleteItem: (id) => dispatch(deleteItem(id)),
   // editItem: (id) => dispatch(updateItem(id)),
+
 });
 
 export default connect(mapState, mapDispatch)(SingleItem);
