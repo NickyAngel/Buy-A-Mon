@@ -11,7 +11,7 @@ import Cart from "./components/Cart";
 import AllUsers from "./components/AllUsers";
 
 import createItem from "./components/createItem";
-import editItem from "./components/editItem";
+import editItem from "./components/EditItem";
 
 /**
  * COMPONENT
