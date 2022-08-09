@@ -1,12 +1,11 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { fetchSingleItem } from "../store/singleItem";
-import { addItemToCart } from "../store/cart";
-import { fetchCart } from "../store/cart";
-import { me } from "../store/auth";
-import { deleteItem } from "../store/items";
-
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { fetchSingleItem } from '../store/singleItem';
+import { addItemToCart } from '../store/cart';
+import { fetchCart } from '../store/cart';
+import { me } from '../store/auth';
+import { deleteItem } from '../store/items';
 
 class SingleItem extends React.Component {
   constructor() {
@@ -69,12 +68,6 @@ class SingleItem extends React.Component {
       this.props.singleItem(this.props.match.params.id);
     }
   }
-  async componentDidMount() {
-    const user = await this.props.getUser();
-    const id = user.auth.id;
-    this.props.singleItem(this.props.match.params.id);
-    this.props.getCart(id);
-  }
   render() {
     const name = this.props.item.name;
     const imageUrl = this.props.item.imageUrl;
@@ -97,25 +90,23 @@ class SingleItem extends React.Component {
         >
           Delete Item
         </button>
-
       </div>
     );
   }
 }
 
-const mapState = (state) => {
+const mapState = state => {
   return {
     cart: state.cart,
     item: state.singleItem,
   };
 };
-const mapDispatch = (dispatch) => ({
-  singleItem: (id) => dispatch(fetchSingleItem(id)),
+const mapDispatch = dispatch => ({
+  singleItem: id => dispatch(fetchSingleItem(id)),
   addItem: (item, userId) => dispatch(addItemToCart(item, userId)),
-  getCart: (id) => dispatch(fetchCart(id)),
+  getCart: id => dispatch(fetchCart(id)),
   getUser: () => dispatch(me()),
-  deleteItem: (id) => dispatch(deleteItem(id)),
-
+  deleteItem: id => dispatch(deleteItem(id)),
 });
 
 export default connect(mapState, mapDispatch)(SingleItem);

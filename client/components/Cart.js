@@ -10,6 +10,7 @@ export class Cart extends React.Component {
     this.state = {
       id: null,
       guestCart: [],
+      subtotal: 0,
     };
   }
   async componentDidMount() {
@@ -22,12 +23,18 @@ export class Cart extends React.Component {
     let guestCart = JSON.parse(window.localStorage.getItem('cart'));
     // console.log(guestCart);
     if (guestCart) {
+      this.state.subtotal = 0;
+      for (let i = 0; i < guestCart.length; i++) {
+        this.state.subtotal += guestCart[i].price * guestCart[i].qty;
+      }
       this.setState({ guestCart: guestCart });
+      window.localStorage.setItem('cart', JSON.stringify(guestCart));
     }
   }
 
   render() {
     let { cart } = this.props || {};
+    let subtotal = 0;
     let guestJSX = (
       <div>
         <h1>Guest Cart</h1>
@@ -38,6 +45,7 @@ export class Cart extends React.Component {
         )}
         <div id="cartItems">
           {this.state.guestCart.map(item => {
+            console.log(item);
             return (
               <div className="cartItems" key={item.id}>
                 <Link to={`/items/${item.id}`}>
@@ -56,6 +64,7 @@ export class Cart extends React.Component {
                     for (let i = 0; i < guestCart.length; i++) {
                       if (guestCart[i].id === item.id) {
                         guestCart[i].qty++;
+                        this.state.subtotal += item.price;
                       }
                     }
                     window.localStorage.setItem(
@@ -76,6 +85,7 @@ export class Cart extends React.Component {
                       for (let i = 0; i < guestCart.length; i++) {
                         if (guestCart[i].id === item.id) {
                           guestCart[i].qty--;
+                          this.state.subtotal -= item.price;
                         }
                       }
                       window.localStorage.setItem(
@@ -98,6 +108,7 @@ export class Cart extends React.Component {
                     for (let i = 0; i < guestCart.length; i++) {
                       if (guestCart[i].id === item.id) {
                         guestCart.splice(i, 1);
+                        this.state.subtotal -= item.price * item.qty;
                         break;
                       }
                     }
@@ -114,6 +125,7 @@ export class Cart extends React.Component {
             );
           })}
         </div>
+        <h3>Subtotal: ${this.state.subtotal / 100}</h3>
         {this.state.guestCart.length !== 0 ? (
           <button
             onClick={() => {
@@ -151,6 +163,7 @@ export class Cart extends React.Component {
                         { qty: ++item.qty, id: item.id, add: true, ...item },
                         this.state.id
                       );
+                      subtotal += item.price;
                     }}
                   >
                     Add 1
@@ -162,6 +175,7 @@ export class Cart extends React.Component {
                           { qty: --item.qty, id: item.id, add: false, ...item },
                           this.state.id
                         );
+                        subtotal -= item.price;
                       }}
                     >
                       Minus 1
@@ -172,6 +186,7 @@ export class Cart extends React.Component {
                   <button
                     onClick={evt => {
                       this.props.delete(item.id, this.state.id);
+                      subtotal -= item.totalPriceAtSaleTime;
                     }}
                   >
                     Remove Pokemon
@@ -181,6 +196,7 @@ export class Cart extends React.Component {
             );
           })}
         </div>
+        <h3>${subtotal / 100}</h3>
         {cart.length !== 0 ? (
           <button
             onClick={() => {
@@ -194,6 +210,7 @@ export class Cart extends React.Component {
         )}
       </div>
     );
+    console.log(this.state);
     return this.state.id ? userJSX : guestJSX;
   }
 }
