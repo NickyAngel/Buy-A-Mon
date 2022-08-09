@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-// import { deleteItem, createItem } from "../store";
 import { fetchAllItems } from "../store/items";
 
 export class AllItems extends React.Component {

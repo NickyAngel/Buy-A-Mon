@@ -3,7 +3,7 @@ const {
   models: { User, Item },
 } = require("../db");
 module.exports = router;
-// import { requireToken, adminCheck } from "./gatekeeping.js";
+
 const requireToken = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
@@ -19,7 +19,7 @@ function adminCheck(req, res, next) {
   if (req.user.role === "admin") {
     next();
   } else {
-    return res.sendStatus(401);
+    return res.status(403).send("YOU SHALL NOT PASS");
   }
 }
 
@@ -53,16 +53,9 @@ router.post(
 //PUT api/items/:id/
 router.put("/:id/", requireToken, adminCheck, async (req, res, next) => {
   try {
-    //decide what the req body looks like
     const item = await Item.findByPk(req.params.id);
-    //what are we able to change per cart? Quantity?
-    res.send(
-      await item.update({
-        ...req.body,
-        // title: req.body.title,
-        // price: req.body.price,
-      })
-    );
+    await item.update({ ...item, ...req.body });
+    res.send(item);
   } catch (err) {
     next(err);
   }
@@ -81,5 +74,3 @@ router.delete("/:id/", requireToken, adminCheck, async (req, res, next) => {
 });
 
 module.exports = router;
-
-// talk to team about token and logged in

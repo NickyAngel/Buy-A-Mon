@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { updateItem } from "../store/items";
 import { fetchSingleItem } from "../store/singleItem";
 
+
 class EditItem extends React.Component {
   constructor() {
     super();
@@ -61,10 +62,12 @@ class EditItem extends React.Component {
             ></input>
             <button
               onClick={async (evt) => {
+
                 evt.preventDefault()
                 console.log(this.state, this.props.item.id);
                 this.props.updateItem(this.state, this.props.item.id);
                 this.props.singleItem(this.props.item.id)
+
               }}
             >
               Edit Item
@@ -86,9 +89,10 @@ const mapState = (state) => {
 };
 const mapDispatch = (dispatch) => ({
   updateItem: (item, id) => dispatch(updateItem(item, id)),
+
   singleItem: (id) => dispatch(fetchSingleItem(id)),
 
-  //   singleItem: (id) => dispatch(fetchSingleItem(id)),
+
 });
 
 export default connect(mapState, mapDispatch)(EditItem);
