@@ -35,7 +35,8 @@ class SingleItem extends React.Component {
         guestCart.push(temp);
       }
       window.localStorage.setItem('cart', JSON.stringify(guestCart));
-      console.log(window.localStorage.cart);
+      // console.log(window.localStorage.cart);
+      alert('added to cart');
     } else {
       const id = user.auth.id;
       let addQty = parseInt(event.target);
@@ -53,6 +54,7 @@ class SingleItem extends React.Component {
         qty: addQty,
       };
       this.props.addItem(newItemOrder, id);
+      alert('added to cart')
     }
   }
   // componentDidMount() {
