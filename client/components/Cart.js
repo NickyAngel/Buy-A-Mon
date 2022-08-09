@@ -10,6 +10,7 @@ export class Cart extends React.Component {
     this.state = {
       id: null,
       guestCart: [],
+      subtotal: 0,
     };
   }
   async componentDidMount() {
@@ -17,12 +18,21 @@ export class Cart extends React.Component {
     if (user) {
       const userId = user.auth.id;
       this.setState({ id: userId });
-      this.props.getCart(userId);
+      await this.props.getCart(userId);
     }
     let guestCart = JSON.parse(window.localStorage.getItem('cart'));
-    // console.log(guestCart);
-    if (guestCart) {
+    if (guestCart && !this.state.id) {
+      for (let i = 0; i < guestCart.length; i++) {
+        this.state.subtotal += guestCart[i].price * guestCart[i].qty;
+      }
       this.setState({ guestCart: guestCart });
+      window.localStorage.setItem('cart', JSON.stringify(guestCart));
+    } else {
+      let temp = 0;
+      for (let i = 0; i < this.props.cart.length; i++) {
+        temp += this.props.cart[i].totalPriceAtSaleTime;
+      }
+      this.setState({ subtotal: temp });
     }
   }
 
@@ -56,6 +66,7 @@ export class Cart extends React.Component {
                     for (let i = 0; i < guestCart.length; i++) {
                       if (guestCart[i].id === item.id) {
                         guestCart[i].qty++;
+                        this.state.subtotal += item.price;
                       }
                     }
                     window.localStorage.setItem(
@@ -76,6 +87,7 @@ export class Cart extends React.Component {
                       for (let i = 0; i < guestCart.length; i++) {
                         if (guestCart[i].id === item.id) {
                           guestCart[i].qty--;
+                          this.state.subtotal -= item.price;
                         }
                       }
                       window.localStorage.setItem(
@@ -98,6 +110,7 @@ export class Cart extends React.Component {
                     for (let i = 0; i < guestCart.length; i++) {
                       if (guestCart[i].id === item.id) {
                         guestCart.splice(i, 1);
+                        this.state.subtotal -= item.price * item.qty;
                         break;
                       }
                     }
@@ -114,6 +127,7 @@ export class Cart extends React.Component {
             );
           })}
         </div>
+        <h3>Subtotal: ${this.state.subtotal / 100}</h3>
         {this.state.guestCart.length !== 0 ? (
           <button
             onClick={() => {
@@ -134,7 +148,6 @@ export class Cart extends React.Component {
         {cart.length === 0 ? <h2>Your Cart is empty</h2> : <span />}
         <div id="cartItems">
           {cart.map(item => {
-            //console.log(item);
             return (
               <div className="cartItems" key={item.id}>
                 <Link to={`/items/${item.id}`}>
@@ -151,6 +164,7 @@ export class Cart extends React.Component {
                         { qty: ++item.qty, id: item.id, add: true, ...item },
                         this.state.id
                       );
+                      this.state.subtotal += item.price;
                     }}
                   >
                     Add 1
@@ -162,6 +176,7 @@ export class Cart extends React.Component {
                           { qty: --item.qty, id: item.id, add: false, ...item },
                           this.state.id
                         );
+                        this.state.subtotal -= item.price;
                       }}
                     >
                       Minus 1
@@ -172,6 +187,7 @@ export class Cart extends React.Component {
                   <button
                     onClick={evt => {
                       this.props.delete(item.id, this.state.id);
+                      this.state.subtotal -= item.totalPriceAtSaleTime;
                     }}
                   >
                     Remove Pokemon
@@ -181,6 +197,7 @@ export class Cart extends React.Component {
             );
           })}
         </div>
+        <h3>Subtotal: ${this.state.subtotal / 100}</h3>
         {cart.length !== 0 ? (
           <button
             onClick={() => {
