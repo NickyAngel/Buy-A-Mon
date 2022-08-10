@@ -14,9 +14,9 @@ export class AllItems extends React.Component {
     await this.props.getItems();
   }
   render() {
-    console.log(this.props)
+    console.log(this.props);
     let { items } = this.props || {};
-    console.log(items)
+    console.log(items);
     return (
       <div>
         {this.props.user.role === "admin" ? (
@@ -29,26 +29,29 @@ export class AllItems extends React.Component {
             </Link>
             <div>
               <div>
-                <h1>Pokemon Cards</h1>
-
                 <div id="allItems">
-                  {items.length > 0 ? (items.map((item) => {
-                    return (
-                      <div className="allItems" key={item.id}>
-                        <Link to={`/items/${item.id}`}>
-                          {item.name}
-                          <img
-                            height="400vh"
-                            width="400vh"
-                            src={item.imageUrl}
-                          />
-                        </Link>
-                        <div>
-                          <h3>Price: ${item.price / 100}</h3>
+                  {items.length > 0 ? (
+                    items.map((item) => {
+                      return (
+                        <div className="allItems" key={item.id}>
+                          <div id="item-name">{item.name}</div>
+                          <Link to={`/items/${item.id}`}>
+                            <img
+                              class="card-image"
+                              height="200vh"
+                              width="200vh"
+                              src={item.imageUrl}
+                            />
+                          </Link>
+                          <div>
+                            <h3>Price: ${item.price / 100}</h3>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })) : <span/>}
+                      );
+                    })
+                  ) : (
+                    <span />
+                  )}
                 </div>
               </div>
             </div>
@@ -56,15 +59,13 @@ export class AllItems extends React.Component {
         ) : (
           <div>
             <div>
-              <h1>Pokemon Cards</h1>
-
               <div id="allItems">
                 {items.map((item) => {
                   return (
                     <div className="allItems" key={item.id}>
+                      <div id="item-name">{item.name} </div>
                       <Link to={`/items/${item.id}`}>
-                        {item.name}
-                        <img height="400vh" width="400vh" src={item.imageUrl} />
+                        <img class="card-image" src={item.imageUrl} />
                       </Link>
                       <div>
                         <h3>Price: ${item.price / 100}</h3>

@@ -1,8 +1,8 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { fetchCart, updateCart, clearItem, closeCart } from '../store/cart';
-import { me } from '../store/auth';
+import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { fetchCart, updateCart, clearItem, closeCart } from "../store/cart";
+import { me } from "../store/auth";
 
 export class Cart extends React.Component {
   constructor(props) {
@@ -20,13 +20,13 @@ export class Cart extends React.Component {
       this.setState({ id: userId });
       await this.props.getCart(userId);
     }
-    let guestCart = JSON.parse(window.localStorage.getItem('cart'));
+    let guestCart = JSON.parse(window.localStorage.getItem("cart"));
     if (guestCart && !this.state.id) {
       for (let i = 0; i < guestCart.length; i++) {
         this.state.subtotal += guestCart[i].price * guestCart[i].qty;
       }
       this.setState({ guestCart: guestCart });
-      window.localStorage.setItem('cart', JSON.stringify(guestCart));
+      window.localStorage.setItem("cart", JSON.stringify(guestCart));
     } else {
       let temp = 0;
       for (let i = 0; i < this.props.cart.length; i++) {
@@ -47,21 +47,21 @@ export class Cart extends React.Component {
           <span />
         )}
         <div id="cartItems">
-          {this.state.guestCart.map(item => {
+          {this.state.guestCart.map((item) => {
             return (
               <div className="cartItems" key={item.id}>
+                <div id="itemname"> {item.name}</div>
                 <Link to={`/items/${item.id}`}>
-                  {item.name}
-                  <img height="100vh" width="100vh" src={item.imageUrl} />
+                  <img class="card-image" src={item.imageUrl} />
                 </Link>
                 <div>
                   <h3>Total Price: ${(item.price * item.qty) / 100}</h3>
                   <h3>Quantity: {item.qty}</h3>
                 </div>
                 <button
-                  onClick={evt => {
+                  onClick={(evt) => {
                     let guestCart = JSON.parse(
-                      window.localStorage.getItem('cart')
+                      window.localStorage.getItem("cart")
                     );
                     for (let i = 0; i < guestCart.length; i++) {
                       if (guestCart[i].id === item.id) {
@@ -70,7 +70,7 @@ export class Cart extends React.Component {
                       }
                     }
                     window.localStorage.setItem(
-                      'cart',
+                      "cart",
                       JSON.stringify(guestCart)
                     );
                     this.setState({ guestCart: guestCart });
@@ -80,9 +80,9 @@ export class Cart extends React.Component {
                 </button>
                 {item.qty > 1 ? (
                   <button
-                    onClick={evt => {
+                    onClick={(evt) => {
                       let guestCart = JSON.parse(
-                        window.localStorage.getItem('cart')
+                        window.localStorage.getItem("cart")
                       );
                       for (let i = 0; i < guestCart.length; i++) {
                         if (guestCart[i].id === item.id) {
@@ -91,7 +91,7 @@ export class Cart extends React.Component {
                         }
                       }
                       window.localStorage.setItem(
-                        'cart',
+                        "cart",
                         JSON.stringify(guestCart)
                       );
                       this.setState({ guestCart: guestCart });
@@ -103,9 +103,9 @@ export class Cart extends React.Component {
                   <span />
                 )}
                 <button
-                  onClick={evt => {
+                  onClick={(evt) => {
                     let guestCart = JSON.parse(
-                      window.localStorage.getItem('cart')
+                      window.localStorage.getItem("cart")
                     );
                     for (let i = 0; i < guestCart.length; i++) {
                       if (guestCart[i].id === item.id) {
@@ -115,7 +115,7 @@ export class Cart extends React.Component {
                       }
                     }
                     window.localStorage.setItem(
-                      'cart',
+                      "cart",
                       JSON.stringify(guestCart)
                     );
                     this.setState({ guestCart: guestCart });
@@ -132,7 +132,7 @@ export class Cart extends React.Component {
           <button
             onClick={() => {
               this.setState({ guestCart: [] });
-              window.localStorage.removeItem('cart');
+              window.localStorage.removeItem("cart");
             }}
           >
             <Link to="/checkout">CHECKOUT</Link>
@@ -147,19 +147,19 @@ export class Cart extends React.Component {
         <h1>Cart</h1>
         {cart.length === 0 ? <h2>Your Cart is empty</h2> : <span />}
         <div id="cartItems">
-          {cart.map(item => {
+          {cart.map((item) => {
             return (
               <div className="cartItems" key={item.id}>
+                <div id="itemname">{item.name}</div>
                 <Link to={`/items/${item.id}`}>
-                  {item.name}
-                  <img height="100vh" width="100vh" src={item.imageUrl} />
+                  <img class="card-image" src={item.imageUrl} />
                 </Link>
                 <div>
                   <h3>Total Price: ${item.totalPriceAtSaleTime / 100}</h3>
                   <h3>Quantity: {item.qty}</h3>
 
                   <button
-                    onClick={evt => {
+                    onClick={(evt) => {
                       this.props.update(
                         { qty: ++item.qty, id: item.id, add: true, ...item },
                         this.state.id
@@ -171,7 +171,7 @@ export class Cart extends React.Component {
                   </button>
                   {item.qty > 1 ? (
                     <button
-                      onClick={evt => {
+                      onClick={(evt) => {
                         this.props.update(
                           { qty: --item.qty, id: item.id, add: false, ...item },
                           this.state.id
@@ -185,7 +185,7 @@ export class Cart extends React.Component {
                     <span />
                   )}
                   <button
-                    onClick={evt => {
+                    onClick={(evt) => {
                       this.props.delete(item.id, this.state.id);
                       this.state.subtotal -= item.totalPriceAtSaleTime;
                     }}
@@ -214,20 +214,20 @@ export class Cart extends React.Component {
     return this.state.id ? userJSX : guestJSX;
   }
 }
-const mapState = state => {
+const mapState = (state) => {
   return {
     cart: state.cart,
   };
 };
-const mapDispatch = dispatch => {
+const mapDispatch = (dispatch) => {
   return {
-    getCart: id => dispatch(fetchCart(id)),
+    getCart: (id) => dispatch(fetchCart(id)),
     getUser: () => dispatch(me()),
     //UPDATE CART
     update: (thingToUpdate, userId) =>
       dispatch(updateCart(thingToUpdate, userId)),
     delete: (itemId, userId) => dispatch(clearItem(itemId, userId)),
-    closeCart: id => dispatch(closeCart(id)),
+    closeCart: (id) => dispatch(closeCart(id)),
   };
 };
 
