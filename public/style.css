@@ -131,18 +131,8 @@ h3 {
 * {
   font-family: "Roboto", sans-serif;
 }
-.container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-left: -65px;
-  margin-top: -20px;
-  width: 130px;
-  height: 40px;
-  text-align: center;
-}
+
 button {
-  justify-content: center;
   outline: none;
   height: 40px;
   text-align: center;
@@ -153,7 +143,12 @@ button {
   letter-spacing: 1px;
   text-shadow: 0;
 }
-
+#checkout {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
 @keyframes rotating {
   from {
     transform: rotate(0deg);

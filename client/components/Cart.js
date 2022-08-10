@@ -59,7 +59,6 @@ export class Cart extends React.Component {
                   <h3>Quantity: {item.qty}</h3>
                 </div>
                 <button
-                  id="checkout"
                   onClick={(evt) => {
                     let guestCart = JSON.parse(
                       window.localStorage.getItem("cart")
