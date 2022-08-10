@@ -1,13 +1,13 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { fetchSingleItem } from '../store/singleItem';
-import { addItemToCart } from '../store/cart';
-import { fetchCart } from '../store/cart';
-import { me } from '../store/auth';
-import { deleteItem } from '../store/items';
+import React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { fetchSingleItem } from "../store/singleItem";
+import { addItemToCart } from "../store/cart";
+import { fetchCart } from "../store/cart";
+import { me } from "../store/auth";
+import { deleteItem } from "../store/items";
 // import { updateItem } from "../store/items";
-import EditItem from './EditItem';
+import EditItem from "./EditItem";
 
 class SingleItem extends React.Component {
   constructor() {
@@ -21,10 +21,10 @@ class SingleItem extends React.Component {
     const user = await this.props.getUser();
     if (!user) {
       let alreadyInCart = false;
-      if (!window.localStorage.getItem('cart')) {
-        window.localStorage.setItem('cart', JSON.stringify([]));
+      if (!window.localStorage.getItem("cart")) {
+        window.localStorage.setItem("cart", JSON.stringify([]));
       }
-      let guestCart = JSON.parse(window.localStorage.getItem('cart'));
+      let guestCart = JSON.parse(window.localStorage.getItem("cart"));
       for (let i = 0; i < guestCart.length; i++) {
         if (guestCart[i].id === this.props.item.id && guestCart[i].qty) {
           guestCart[i].qty++;
@@ -37,8 +37,8 @@ class SingleItem extends React.Component {
         guestCart.push(temp);
       }
 
-      window.localStorage.setItem('cart', JSON.stringify(guestCart));
-      alert('added to cart');
+      window.localStorage.setItem("cart", JSON.stringify(guestCart));
+      alert("added to cart");
     } else {
       const id = user.auth.id;
 
@@ -51,7 +51,7 @@ class SingleItem extends React.Component {
         qty: 1,
       };
       this.props.addItem(newItemOrder, id);
-      alert('added to cart');
+      alert("added to cart");
     }
   }
 
@@ -72,7 +72,7 @@ class SingleItem extends React.Component {
     const price = this.props.item.price;
     return (
       <div>
-        {this.props.user.role === 'admin' ? (
+        {this.props.user.role === "admin" ? (
           <div>
             <img width="400vh" height="400vh" src={imageUrl} />
             <h1>{name}</h1>
@@ -84,11 +84,12 @@ class SingleItem extends React.Component {
             <button
               onClick={async () => {
                 await this.props.deleteItem(this.props.item.id);
+                this.props.history.push("/home");
               }}
             >
               Delete Item
             </button>
-            <EditItem item={this.props.item} />;
+            <EditItem item={this.props.item} />
           </div>
         ) : (
           <div>
@@ -106,19 +107,19 @@ class SingleItem extends React.Component {
   }
 }
 
-const mapState = state => {
+const mapState = (state) => {
   return {
     cart: state.cart,
     item: state.singleItem,
     user: state.auth,
   };
 };
-const mapDispatch = dispatch => ({
-  singleItem: id => dispatch(fetchSingleItem(id)),
+const mapDispatch = (dispatch) => ({
+  singleItem: (id) => dispatch(fetchSingleItem(id)),
   addItem: (item, userId) => dispatch(addItemToCart(item, userId)),
-  getCart: id => dispatch(fetchCart(id)),
+  getCart: (id) => dispatch(fetchCart(id)),
   getUser: () => dispatch(me()),
-  deleteItem: id => dispatch(deleteItem(id)),
+  deleteItem: (id) => dispatch(deleteItem(id)),
 });
 
 export default connect(mapState, mapDispatch)(SingleItem);

@@ -1,8 +1,8 @@
-const router = require('express').Router();
+const router = require("express").Router();
 const {
   models: { Item },
-} = require('../db');
-const User = require('../db/models/User');
+} = require("../db");
+const User = require("../db/models/User");
 module.exports = router;
 
 const requireToken = async (req, res, next) => {
@@ -17,15 +17,15 @@ const requireToken = async (req, res, next) => {
   }
 };
 const adminCheck = (req, res, next) => {
-  if (req.user.role === 'admin') {
+  if (req.user.role === "admin") {
     next();
   } else {
-    return res.status(403).send('YOU SHALL NOT PASS');
+    return res.status(403).send("YOU SHALL NOT PASS");
   }
 };
 //Grabbing all items from the DB
 //api/items/
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const items = await Item.findAll();
 
@@ -37,7 +37,7 @@ router.get('/', async (req, res, next) => {
 
 //Grabbing a single item from the DB
 //api/items/:id
-router.get('/:id', async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const item = await Item.findByPk(req.params.id);
     res.json(item);
@@ -49,7 +49,7 @@ router.get('/:id', async (req, res, next) => {
 //Create the item as an admin
 //POST api/items/:id/
 
-router.post('/create/', requireToken, adminCheck, async (req, res, next) => {
+router.post("/create/", requireToken, adminCheck, async (req, res, next) => {
   try {
     const item = await Item.create(req.body);
     res.status(201).send(item);
@@ -61,12 +61,12 @@ router.post('/create/', requireToken, adminCheck, async (req, res, next) => {
 //Update the item as an admin
 //PUT api/items/:id/
 
-router.put('/:id/', requireToken, adminCheck, async (req, res, next) => {
+router.put("/:id/", requireToken, adminCheck, async (req, res, next) => {
   try {
     const item = await Item.findByPk(req.params.id);
-    const picture = req.body.imageUrl == '' ? item.imageUrl : req.body.imageUrl;
+    const picture = req.body.imageUrl == "" ? item.imageUrl : req.body.imageUrl;
     const summary =
-      req.body.description == '' ? item.description : req.body.description;
+      req.body.description == "" ? item.description : req.body.description;
 
     await item.update({
       ...item,
@@ -84,10 +84,11 @@ router.put('/:id/', requireToken, adminCheck, async (req, res, next) => {
 //Delete the item if admin is deleting
 //DELETE api/items/:id
 
-router.delete('/:id/', requireToken, adminCheck, async (req, res, next) => {
+router.delete("/:id/", requireToken, adminCheck, async (req, res, next) => {
   try {
     const item = await Item.findByPk(req.params.id);
     await item.destroy(req.params.id);
+    console.log(req.params.id);
     res.send(item);
   } catch (err) {
     next(err);
