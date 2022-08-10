@@ -59,6 +59,7 @@ export class Cart extends React.Component {
                   <h3>Quantity: {item.qty}</h3>
                 </div>
                 <button
+                  id="checkout"
                   onClick={(evt) => {
                     let guestCart = JSON.parse(
                       window.localStorage.getItem("cart")
@@ -182,7 +183,7 @@ export class Cart extends React.Component {
                       Minus 1
                     </button>
                   ) : (
-                    <span />
+                    "<span />"
                   )}
                   <button
                     onClick={(evt) => {
@@ -200,6 +201,7 @@ export class Cart extends React.Component {
         <h3>Subtotal: ${this.state.subtotal / 100}</h3>
         {cart.length !== 0 ? (
           <button
+            id="checkout"
             onClick={() => {
               this.props.closeCart(this.state.id);
             }}

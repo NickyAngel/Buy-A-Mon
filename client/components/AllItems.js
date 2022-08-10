@@ -22,10 +22,14 @@ export class AllItems extends React.Component {
         {this.props.user.role === "admin" ? (
           <div>
             <Link to="/createItem">
-              <button className="creatItemButton">Add new Item</button>
+              <button id="checkout" className="creatItemButton">
+                Add new Item
+              </button>
             </Link>
             <Link to="/users">
-              <button className="allUsers">All Users</button>
+              <button id="checkout" className="allUsers">
+                All Users
+              </button>
             </Link>
             <div>
               <div>
