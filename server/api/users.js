@@ -1,9 +1,9 @@
-const router = require('express').Router();
+const router = require("express").Router();
 const {
   models: { User, Order, OrderItem, Item },
-} = require('../db');
+} = require("../db");
 module.exports = router;
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const requireToken = async (req, res, next) => {
   try {
@@ -16,18 +16,18 @@ const requireToken = async (req, res, next) => {
   }
 };
 const adminCheck = (req, res, next) => {
-  if (req.user.role === 'admin') {
+  if (req.user.role === "admin") {
     next();
   } else {
-    return res.status(403).send('YOU SHALL NOT PASS');
+    return res.status(403).send("YOU SHALL NOT PASS");
   }
 };
 //getting all users by ID? not sure where we would do this
 //GET api/users/
-router.get('/', requireToken, adminCheck, async (req, res, next) => {
+router.get("/", requireToken, adminCheck, async (req, res, next) => {
   try {
     const users = await User.findAll({
-      attributes: ['id', 'email', 'firstName', 'lastName', 'role'],
+      attributes: ["id", "email", "firstName", "lastName", "role"],
     });
     res.json(users);
   } catch (err) {
@@ -37,7 +37,7 @@ router.get('/', requireToken, adminCheck, async (req, res, next) => {
 
 //Grabbing a users data/profile when logged in
 //GET api/users/:id
-router.get('/:id', requireToken, async (req, res, next) => {
+router.get("/:id", requireToken, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
     res.json(user);
@@ -48,7 +48,7 @@ router.get('/:id', requireToken, async (req, res, next) => {
 
 //Create a new user row to the User table
 //POST api/users/
-router.post('/', async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
     const user = await User.create(req.body);
     res.status(201).json(user);
@@ -58,7 +58,7 @@ router.post('/', async (req, res, next) => {
 });
 
 //checkout the cart functionality
-router.put('/:id', requireToken, async (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
   try {
     const cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
@@ -99,7 +99,7 @@ router.put('/:id', requireToken, async (req, res, next) => {
 
 //grab the cart per single user
 //GET api/users/:id/cart/
-router.get('/:id/cart/', requireToken, async (req, res, next) => {
+router.get("/:id/cart/", requireToken, async (req, res, next) => {
   try {
     const cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
@@ -109,7 +109,7 @@ router.get('/:id/cart/', requireToken, async (req, res, next) => {
     });
     const itemDetails = [];
     await Promise.all(
-      items.map(async item => {
+      items.map(async (item) => {
         let eachMon = await Item.findByPk(item.itemId);
         eachMon.dataValues.priceAtSaleTime = item.price;
         eachMon.dataValues.qty = item.qty;
@@ -126,7 +126,7 @@ router.get('/:id/cart/', requireToken, async (req, res, next) => {
 
 //Update the cart per item added to each cart
 //PUT api/users/:id/cart/
-router.put('/:id/cart/', requireToken, async (req, res, next) => {
+router.put("/:id/cart/", requireToken, async (req, res, next) => {
   try {
     const cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
@@ -154,7 +154,7 @@ router.put('/:id/cart/', requireToken, async (req, res, next) => {
     });
     const itemDetails = [];
     await Promise.all(
-      items.map(async item => {
+      items.map(async (item) => {
         let eachMon = await Item.findByPk(item.itemId);
         eachMon.dataValues.priceAtSaleTime = item.price;
         eachMon.dataValues.qty = item.qty;
@@ -200,7 +200,7 @@ router.put('/:id/cart/', requireToken, async (req, res, next) => {
 //   }
 // });
 
-router.post('/:id/cart', requireToken, async (req, res, next) => {
+router.post("/:id/cart", requireToken, async (req, res, next) => {
   try {
     let cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
@@ -236,7 +236,7 @@ router.post('/:id/cart', requireToken, async (req, res, next) => {
   }
 });
 //DELETE ROUTE FOR CART ITEM
-router.delete('/:id/cart/:itemId', requireToken, async (req, res, next) => {
+router.delete("/:id/cart/:itemId", requireToken, async (req, res, next) => {
   try {
     const cart = await Order.findOne({
       where: { userId: req.params.id, open: true },
@@ -249,7 +249,7 @@ router.delete('/:id/cart/:itemId', requireToken, async (req, res, next) => {
     });
     const itemDetails = [];
     await Promise.all(
-      items.map(async item => {
+      items.map(async (item) => {
         let eachMon = await Item.findByPk(item.itemId);
         eachMon.dataValues.priceAtSaleTime = item.price;
         eachMon.dataValues.qty = item.qty;
