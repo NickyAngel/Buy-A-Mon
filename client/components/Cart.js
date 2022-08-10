@@ -100,7 +100,7 @@ export class Cart extends React.Component {
                     Minus 1
                   </button>
                 ) : (
-                  <span />
+                  ""
                 )}
                 <button
                   onClick={(evt) => {
@@ -138,7 +138,7 @@ export class Cart extends React.Component {
             <Link to="/checkout">CHECKOUT</Link>
           </button>
         ) : (
-          <span />
+          ""
         )}
       </div>
     );
@@ -182,7 +182,7 @@ export class Cart extends React.Component {
                       Minus 1
                     </button>
                   ) : (
-                    "<span />"
+                    ""
                   )}
                   <button
                     onClick={(evt) => {
