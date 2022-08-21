@@ -1,36 +1,10 @@
-### Heroku
+### About Buy-A-Mon:
 
-1.  Set up the [Heroku command line tools][heroku-cli]
-2.  `heroku login`
-3.  Add a git remote for heroku:
+My team and I worked together over the course of a week to build this mock e-commerce website from scratch. 
 
-[heroku-cli]: https://devcenter.heroku.com/articles/heroku-cli
+My main focus was on the back-end database structure, I designed the Schema for the Order and Order-Items tables.
+I also wrote the Express routes to call the database and serve up users' carts via those tables. 
+Lastly, I helped implement authorization middleware in out Express routes to prevent our database from being manipulated by outside forces. 
 
-- **If you are creating a new app...**
-
-  1.  `heroku create` or `heroku create your-app-name` if you have a
-      name in mind.
-  2.  `heroku config:set JWT=<your secret here!>` to set a secret for JWT signing
-
-Database Setup
-
-3.  `heroku addons:create heroku-postgresql:hobby-dev` to add
-    ("provision") a postgres database to your heroku dyno (This creates your production database)
-
-
-4.  `heroku config:set SEED=true` to get heroku to sync and seed your database
-
-5.  note everytime your app restarts, the database tables will be dropped and re-created. To avoid this you can `config:unset SEED`
-
-=======
-
-4.  `heroku config:set SEED=true` to get heroku to sync and seed your database
-
-5.  note everytime your app restarts, the database tables will be dropped and re-created. To avoid this you can `config:unset SEED`
-
-- **If you already have a Heroku app...**
-
-  1.  `heroku git:remote your-app-name` You'll need to be a
-      collaborator on the app.
-
-Now, you should be deployed!
+On the front-end I wrote the React components to edit a user's cart.
+I wrote the functionallity for non-logged-in users to have a persistant "Guest Cart" utilizing local storage. 
